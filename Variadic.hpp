@@ -12,7 +12,6 @@
 #include "Function.hpp"
 #include "Unary.hpp"
 #include "Constant.hpp"
-#include "Flattener.hpp"
 
 class Variadic: public Function{
     char op;
