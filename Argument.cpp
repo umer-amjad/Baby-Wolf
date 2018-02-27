@@ -6,17 +6,27 @@
 
 #include "Argument.hpp"
 
-double Argument::eval(double arg) const { return arg;}
-
-const Function* Argument::substitute(const Function* fn) const {
-    return this;
+double Argument::eval(double arg) const {
+    return arg;
 }
 
-Function* Argument::collapse() const { return new Argument;}
+const Function* Argument::substitute(const Function* subFn) const {
+    return subFn;
+}
 
-std::string Argument::getPrefixString() const { return "x";}
+Function* Argument::collapse() const {
+    return new Argument;
+}
 
-std::string Argument::getInfixString() const { return getPrefixString();}
+std::string Argument::getPrefixString() const {
+    return "x";
+}
 
-FunctionType Argument::getType() const { return FunctionType::ARGUMENT;}
+std::string Argument::getInfixString() const {
+    return getPrefixString();
+}
+
+FunctionType Argument::getType() const {
+    return FunctionType::ARGUMENT;
+}
 

@@ -59,7 +59,7 @@ public:
     virtual double eval(double arg) const = 0;
     
     //return this function but subtitute x with fn
-    virtual const Function* substitute(const Function* fn) const = 0;
+    virtual const Function* substitute(const Function* subFn) const = 0;
     
     //returns arithmetically simplified function - NOTE: returns new-ly allocated function
     const Function* simplify() const;

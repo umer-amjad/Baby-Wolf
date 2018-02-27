@@ -38,8 +38,12 @@ double Variadic::eval(double arg) const{
     return result;
 }
 
-const Function* Variadic::substitute(const Function* fn) const {
-    return this;
+const Function* Variadic::substitute(const Function* subFn) const {
+    std::vector<const Function*> substitutedFns;
+    for (auto& fn: fns){
+        substitutedFns.emplace_back(fn->substitute(subFn));
+    }
+    return new Variadic(op, substitutedFns);
 }
 
 const Function* Variadic::wrap() const {

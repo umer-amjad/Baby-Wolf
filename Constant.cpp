@@ -8,10 +8,12 @@
 
 Constant::Constant(double val): val(val){}
 
-double Constant::eval(double arg) const { return val;}
+double Constant::eval(double arg) const {
+    return val;
+}
 
-const Function* Constant::substitute(const Function* fn) const {
-    return this;
+const Function* Constant::substitute(const Function* subFn) const {
+    return new Constant(*this);
 }
 
 std::string Constant::getPrefixString() const {
@@ -26,9 +28,15 @@ std::string Constant::getPrefixString() const {
     return stream.str();
 }
 
-Function* Constant::collapse() const {return new Constant(val);}
+Function* Constant::collapse() const {
+    return new Constant(val);
+}
 
-std::string Constant::getInfixString() const { return getPrefixString();}
+std::string Constant::getInfixString() const {
+    return getPrefixString();
+}
 
-FunctionType Constant::getType() const { return FunctionType::CONSTANT;}
+FunctionType Constant::getType() const {
+    return FunctionType::CONSTANT;
+}
 
