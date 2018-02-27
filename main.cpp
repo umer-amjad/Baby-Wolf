@@ -71,6 +71,9 @@ int main(int argc, const char * argv[]) {
 //sinx+5
 //cosx
 //sin(x+5)
+//acoshx
+//acsc(x+3)
+//asech(x^2+5x+3)
 
 
 

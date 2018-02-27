@@ -52,14 +52,14 @@ class Function {
     virtual std::pair<const Function*, std::vector<const Function*>> getFns() const;
     
 public:
+    //Display options
+    static Options opts;
+    
     //evaluate function given argument
     virtual double eval(double arg) const = 0;
     
     //returns arithmetically simplified function - NOTE: returns new-ly allocated function
     const Function* simplify() const;
-    
-    //Display options
-    static Options opts;
     
     //overload ostream operator to return string
     friend std::ostream& operator<<(std::ostream& o, const Function& fn);
