@@ -9,22 +9,43 @@
 //see notes in Parser.hpp and Function.hpp
 
 int main(int argc, const char * argv[]) {
+    Function::opts = {true, false};
     while (true) {
         double arg = 0;
         std::string myExpr;
-        std::cout << "Enter function, or q to quit: " << '\n';
+        std::cout << "Enter function, q to quit, or o for display options: " << '\n';
         getline(std::cin, myExpr);
         if (myExpr == "q"){
             break;
+        } else if (myExpr == "o"){
+            std::cout << "Enter 0 or 1 to toggle options.\n"
+                << "True indicates that that display option will be used. Press d when done.\n";
+            while(true){
+                std::cout << std::boolalpha;
+                std::cout << "0: Prefix: " << Function::opts.prefix << '\n';
+                std::cout << "1: Infix: " << Function::opts.infix << '\n';
+                std::string displayOption;
+                getline(std::cin, displayOption);
+                if (displayOption == "d"){
+                    break;
+                } else if (displayOption == "0"){
+                    Function::opts.prefix = !Function::opts.prefix;
+                } else if (displayOption == "1"){
+                    Function::opts.infix = !Function::opts.infix;
+                } else {
+                    std::cout << "Please enter d, 0, or 1\n";
+                }
+            }
+            continue;
         }
         std::unique_ptr<const Function> f(parse(myExpr));
         if (f == nullptr)
             continue;
         std::cout << "Function is: " << '\n';
-        std::cout << "f(x) = " << *f << '\n';
+        std::cout << *f;
         std::unique_ptr<const Function> simpleF(f->simplify());
         std::cout << "Simplified function is: " << '\n';
-        std::cout << "f(x) = " << *simpleF << '\n';
+        std::cout << *simpleF;
 //        std::cout << "Original function is: " << '\n';
 //        std::cout << "f(x) = " << *f << '\n';
         std::cout << "Enter argument: " << '\n';

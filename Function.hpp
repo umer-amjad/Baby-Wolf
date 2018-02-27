@@ -18,21 +18,22 @@
 
 enum FunctionType {VARIADIC, UNARY, ARGUMENT, CONSTANT};
 
-class Function{
+struct Options {
+    bool prefix;
+    bool infix;
+};
+
+class Function {
     friend class Variadic;
     friend class Unary;
     
     //wraps use of "-" and "/" variadics with "neg" and "inv" unaries - not new-ly allocated except for new unaries
-    virtual const Function* wrap() const {
-        return this;
-    };
+    virtual const Function* wrap() const;
     
     //flattens syntax tree for operations + and * - not new-ly allocated
-    virtual const Function* flatten() const {
-        return this;
-    };
+    virtual const Function* flatten() const;
     
-    //"collapses" tree where arithmetic operations where possible - NOTE: returns new-ly allocated function
+    //"collapses" tree for arithmetic operations where possible - NOTE: returns new-ly allocated function
     virtual const Function* collapse() const = 0;
     
     //return function string in getPrefixString notation
@@ -45,31 +46,27 @@ class Function{
     virtual FunctionType getType() const = 0;
     
     //get operation (for variadic and unary types only), default empty:
-    virtual char getOp() const {return ' ';};
+    virtual char getOp() const;
     
     //get functions (for variadic and unary types only), default <nullptr, empty vector>:
-    virtual std::pair<const Function*, std::vector<const Function*>> getFns() const {
-        std::vector<const Function*> empty;
-        return {nullptr, empty};
-    };
+    virtual std::pair<const Function*, std::vector<const Function*>> getFns() const;
     
 public:
     //evaluate function given argument
     virtual double eval(double arg) const = 0;
     
     //returns arithmetically simplified function - NOTE: returns new-ly allocated function
-    const Function* simplify() const {
-        return this->wrap()->flatten()->collapse()->flatten();
-    };
+    const Function* simplify() const;
     
-    //overload ostream operator to return string (switch to getPrefixString here if wanted)
-    friend std::ostream& operator<< (std::ostream& o, const Function& fn){
-        o << fn.getPrefixString();
-        return o;
-    };
+    //Display options
+    static Options opts;
+    
+    //overload ostream operator to return string
+    friend std::ostream& operator<<(std::ostream& o, const Function& fn);
     
     //virtual destructor
     virtual ~Function(){};
 };
+
 
 #endif /* Function_hpp */
