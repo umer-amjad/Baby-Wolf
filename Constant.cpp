@@ -24,7 +24,7 @@ std::string Constant::getPrefixString() const {
     if (val == M_E){
         return "e";
     }
-    stream << std::fixed << std::setprecision(0) << val;
+    stream << val;
     return stream.str();
 }
 
