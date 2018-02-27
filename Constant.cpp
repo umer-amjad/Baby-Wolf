@@ -10,6 +10,10 @@ Constant::Constant(double val): val(val){}
 
 double Constant::eval(double arg) const { return val;}
 
+const Function* Constant::substitute(const Function* fn) const {
+    return this;
+}
+
 std::string Constant::getPrefixString() const {
     std::stringstream stream;
     if (val == M_PI){

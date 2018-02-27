@@ -7,6 +7,7 @@
 #include "Unary.hpp"
 
 Unary::Unary(std::string o, const Function* fn): op(o), fn(fn){}
+
 double Unary::eval(double arg) const{
     double result = fn->eval(arg);
     if (op == "abs"){
@@ -65,6 +66,10 @@ double Unary::eval(double arg) const{
         return atanh(1/result);
     }
     return 0;
+}
+
+const Function* Unary::substitute(const Function* fn) const {
+    return this;
 }
 
 const Function* Unary::wrap() const {

@@ -12,6 +12,7 @@
 class Argument: public Function{
 public:
     virtual double eval(double arg) const;
+    virtual const Function* substitute(const Function* fn) const;
     virtual Function* collapse() const;
     virtual std::string getPrefixString() const;
     virtual std::string getInfixString() const;

@@ -8,6 +8,10 @@
 
 double Argument::eval(double arg) const { return arg;}
 
+const Function* Argument::substitute(const Function* fn) const {
+    return this;
+}
+
 Function* Argument::collapse() const { return new Argument;}
 
 std::string Argument::getPrefixString() const { return "x";}

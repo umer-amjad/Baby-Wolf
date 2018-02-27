@@ -38,6 +38,10 @@ double Variadic::eval(double arg) const{
     return result;
 }
 
+const Function* Variadic::substitute(const Function* fn) const {
+    return this;
+}
+
 const Function* Variadic::wrap() const {
     //std::cout << "Before wrapping: " << *this << " end\n"; DEBUG
     char wrapOp = op;
