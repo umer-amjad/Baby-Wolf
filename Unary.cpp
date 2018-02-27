@@ -51,6 +51,18 @@ double Unary::eval(double arg) const{
         return 1 / sinh(result);
     } else if (op == "coth"){
         return 1 / tanh(result);
+    } else if (op == "asinh"){
+        return asinh(result);
+    } else if (op == "acosh"){
+        return acosh(result);
+    } else if (op == "atanh"){
+        return atanh(result);
+    } else if (op == "asech"){
+        return acosh(1/result);
+    } else if (op == "acsch"){
+        return asinh(1/result);
+    } else if (op == "acoth"){
+        return atanh(1/result);
     }
     return 0;
 }
