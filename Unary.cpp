@@ -14,7 +14,7 @@ double Unary::eval(double arg) const{
     } else if (op == "neg"){
         return -1 * result;
     } else if (op == "inv"){
-        return 1.0 / result;
+        return 1 / result;
     } else if (op == "sin"){
         return sin(result);
     } else if (op == "cos"){
@@ -22,11 +22,35 @@ double Unary::eval(double arg) const{
     } else if (op == "tan"){
         return tan(result);
     } else if (op == "sec"){
-        return 1.0 / cos(result);
+        return 1 / cos(result);
     } else if (op == "csc"){
-        return 1.0 / sin(result);
+        return 1 / sin(result);
     } else if (op == "cot"){
-        return 1.0 / tan(result);
+        return 1 / tan(result);
+    } else if (op == "asin"){
+        return asin(result);
+    } else if (op == "acos"){
+        return acos(result);
+    } else if (op == "atan"){
+        return atan(result);
+    } else if (op == "asec"){
+        return acos(1/result);
+    } else if (op == "acsc"){
+        return asin(1/result);
+    } else if (op == "acot"){
+        return atan(1/result);
+    } else if (op == "sinh"){
+        return sinh(result);
+    } else if (op == "cosh"){
+        return cosh(result);
+    } else if (op == "tanh"){
+        return tanh(result);
+    } else if (op == "sech"){
+        return 1 / cosh(result);
+    } else if (op == "csch"){
+        return 1 / sinh(result);
+    } else if (op == "coth"){
+        return 1 / tanh(result);
     }
     return 0;
 }

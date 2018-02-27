@@ -7,8 +7,7 @@
 #include "Parser.hpp"
 
 const std::vector<char> ops{'+', '-', '*', '/', '^'};
-const std::vector<std::string> trigFns{"sin", "cos", "tan", "sec", "csc", "cot"};
-const std::vector<std::string> trigFns2{"asin", "acos", "atan", "asec", "acsc", "acot", "sinh", "cosh", "tanh", "sech", "csch", "coth"};
+const std::vector<std::string> trigFns{"sin", "cos", "tan", "sec", "csc", "cot", "asin", "acos", "atan", "asec", "acsc", "acot", "sinh", "cosh", "tanh", "sech", "csch", "coth"};
 const std::vector<std::string> trigFns3{"asinh", "acosh", "atanh", "asech", "acsch", "acoth"};
 
 
@@ -127,11 +126,10 @@ const Function* parseToken(std::string expr){
     }
     
     //trig functions
-    if (length >= 3){
-        for (auto trigFn : trigFns){
-            if (expr.substr(0, 3) == trigFn){
-                return new Unary(trigFn, parseToken(expr.substr(3, length - 3)));
-            }
+    for (auto trigFn : trigFns){
+        int trigFnLength = (int) trigFn.length();
+        if (length >= trigFnLength && expr.substr(0, trigFnLength) == trigFn){
+            return new Unary(trigFn, parseToken(expr.substr(trigFnLength, length - trigFnLength)));
         }
     }
     
