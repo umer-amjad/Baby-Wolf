@@ -47,7 +47,7 @@ int main(int argc, const char * argv[]) {
         std::unique_ptr<const Function> simpleF(f->simplify());
         std::cout << "Simplified function is: " << '\n';
         std::cout << *simpleF;
-        std::cout << "Substituted function is: " << '\n';
+        std::cout << "Substituted function using  is: x^2+sin(cos(x))" << '\n';
         const Function* sub = f->substitute(subTest);
         std::cout << *sub;
 //        std::cout << "Original function is: " << '\n';

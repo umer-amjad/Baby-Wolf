@@ -88,12 +88,12 @@ const Function* Unary::substitute(const Function* subFn) const {
 }
 
 const Function* Unary::wrap() const {
-    const Function * wrapFn = fn->wrap();
+    const Function* wrapFn = fn->wrap();
     return new Unary(op, wrapFn);
 }
 
 const Function* Unary::flatten() const {
-    const Function * flatFn = fn->flatten();
+    const Function* flatFn = fn->flatten();
     //std::cout << "Before flattening " << *flatFn << std::endl; //debug
     if (flatFn->getType() == FunctionType::UNARY && flatFn->getOp() == op[0]){
         if (op == "abs"){
@@ -108,7 +108,7 @@ const Function* Unary::flatten() const {
 }
 
 const Function* Unary::collapse() const {
-    const Function * simpleFn = fn->collapse();
+    const Function* simpleFn = fn->collapse();
     
     if (simpleFn->getType() == FunctionType::CONSTANT){
         return new Constant(this->eval(0)); //value of argument doesn't matter
