@@ -15,7 +15,7 @@ double Argument::eval(double arg) const {
 }
 
 const Function* Argument::substitute(const Function* subFn) const {
-    return subFn;
+    return subFn->copy();
 }
 
 Function* Argument::collapse() const {

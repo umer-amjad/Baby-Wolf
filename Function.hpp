@@ -26,6 +26,7 @@ struct Options {
 class Function {
     friend class Variadic;
     friend class Unary;
+    friend class Argument;
     
     //wraps use of "-" and "/" variadics with "neg" and "inv" unaries - not new-ly allocated except for new unaries
     virtual const Function* wrap() const;

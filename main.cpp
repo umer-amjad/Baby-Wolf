@@ -10,6 +10,7 @@
 
 int main(int argc, const char * argv[]) {
     Function::opts = {true, false};
+    const Function* subTest = parse("x^2+sin(cos(x))"); //testing substitution
     while (true) {
         double arg = 0;
         std::string myExpr;
@@ -46,6 +47,9 @@ int main(int argc, const char * argv[]) {
         std::unique_ptr<const Function> simpleF(f->simplify());
         std::cout << "Simplified function is: " << '\n';
         std::cout << *simpleF;
+        std::cout << "Substituted function is: " << '\n';
+        const Function* sub = f->substitute(subTest);
+        std::cout << *sub;
 //        std::cout << "Original function is: " << '\n';
 //        std::cout << "f(x) = " << *f << '\n';
         std::cout << "Enter argument: " << '\n';
