@@ -13,7 +13,7 @@ int main(int argc, const char * argv[]) {
     while (true) {
         double arg = 0;
         std::string myExpr;
-        std::cout << "Enter function, q to quit, or o for display options: " << '\n';
+        std::cout << "Enter function, q to quit, or o for display options: " << std::endl;
         getline(std::cin, myExpr);
         if (myExpr == "q"){
             break;
@@ -23,7 +23,7 @@ int main(int argc, const char * argv[]) {
             while(true){
                 std::cout << std::boolalpha;
                 std::cout << "0: Prefix: " << Function::opts.prefix << '\n';
-                std::cout << "1: Infix: " << Function::opts.infix << '\n';
+                std::cout << "1: Infix: " << Function::opts.infix << std::endl;
                 std::string displayOption;
                 getline(std::cin, displayOption);
                 if (displayOption == "d"){
