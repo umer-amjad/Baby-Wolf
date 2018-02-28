@@ -13,6 +13,7 @@ class Constant: public Function{
     double val;
     
     virtual Function* collapse() const;
+    virtual Function* copy() const;
 
 public:
     Constant(double val);

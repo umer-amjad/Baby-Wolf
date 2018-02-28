@@ -11,7 +11,7 @@
 
 class Argument: public Function{
     virtual Function* collapse() const;
-    
+    virtual Function* copy() const;
 public:
     virtual double eval(double arg) const;
     virtual const Function* substitute(const Function* subFn) const;

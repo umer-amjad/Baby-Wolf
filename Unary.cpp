@@ -8,6 +8,21 @@
 
 Unary::Unary(std::string o, const Function* fn): op(o), fn(fn){}
 
+Unary::Unary(const Unary& u){
+    this->op = u.op;
+    Function* f = u.fn->copy();
+    this->fn = f;
+}
+
+Unary& Unary::operator=(Unary u){
+    std::swap(*this, u);
+    return *this;
+}
+
+Function* Unary::copy() const {
+    return new Unary(*this);
+}
+
 double Unary::eval(double arg) const{
     double result = fn->eval(arg);
     if (op == "abs"){

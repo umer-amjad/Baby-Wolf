@@ -8,6 +8,22 @@
 
 Variadic::Variadic(char o,std::vector<const Function*> fns): op(o), fns(fns) {}
 
+Variadic::Variadic(const Variadic& v){
+    for (auto& fn: v.fns){
+        this->fns.emplace_back(fn->copy());
+    }
+    op = v.op;
+}
+
+Variadic& Variadic::operator=(Variadic v){
+    std::swap(*this, v);
+    return *this;
+}
+
+Function* Variadic::copy() const {
+    return new Variadic(*this);
+}
+
 double Variadic::eval(double arg) const{
     double result = fns[0]->eval(arg); //start with first
     int reverser = (int) (fns.size() - 3); //allows to reverse iterator

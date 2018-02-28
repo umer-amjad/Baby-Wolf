@@ -17,6 +17,11 @@ Constant& Constant::operator=(Constant c){
     return *this;
 }
 
+Function* Constant::copy() const {
+    return new Constant(*this);
+}
+
+
 double Constant::eval(double arg) const {
     return val;
 }

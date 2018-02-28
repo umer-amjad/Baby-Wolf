@@ -51,6 +51,8 @@ class Function {
     //get functions (for variadic and unary types only), default <nullptr, empty vector>:
     virtual std::pair<const Function*, std::vector<const Function*>> getFns() const;
     
+    virtual Function* copy() const = 0;
+    
 public:
     //Display options
     static Options opts;

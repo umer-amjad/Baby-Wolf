@@ -17,6 +17,7 @@ class Variadic: public Function{
     char op;
     std::vector<const Function*> fns;
 
+    virtual Function* copy() const;
     virtual const Function* wrap() const;
     virtual const Function* flatten() const;
     virtual const Function* collapse() const;

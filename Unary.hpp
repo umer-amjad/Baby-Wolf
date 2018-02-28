@@ -14,6 +14,7 @@ class Unary: public Function{
     std::string op;
     const Function* fn;
 
+    virtual Function* copy() const;
     virtual const Function* wrap() const;
     virtual const Function* flatten() const;
     virtual const Function* collapse() const;

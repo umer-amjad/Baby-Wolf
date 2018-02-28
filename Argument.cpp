@@ -6,6 +6,10 @@
 
 #include "Argument.hpp"
 
+Function* Argument::copy() const {
+    return new Argument;
+}
+
 double Argument::eval(double arg) const {
     return arg;
 }
