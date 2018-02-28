@@ -8,6 +8,15 @@
 
 Constant::Constant(double val): val(val){}
 
+Constant::Constant(const Constant& c){
+    this->val = c.val;
+}
+
+Constant& Constant::operator=(Constant c){
+    std::swap(*this, c);
+    return *this;
+}
+
 double Constant::eval(double arg) const {
     return val;
 }

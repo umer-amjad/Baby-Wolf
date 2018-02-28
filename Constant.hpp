@@ -16,6 +16,10 @@ class Constant: public Function{
 
 public:
     Constant(double val);
+    Constant(const Constant& c);
+    
+    Constant& operator=(Constant c);
+
     virtual double eval(double arg) const;
     virtual const Function* substitute(const Function* subFn) const;
     virtual std::string getPrefixString() const;

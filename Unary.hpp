@@ -22,6 +22,10 @@ class Unary: public Function{
     
 public:
     Unary(std::string o, const Function* fn);
+    Unary(const Unary& u);
+    
+    Unary& operator=(Unary u);
+
     virtual double eval(double arg) const;
     virtual const Function* substitute(const Function* subFn) const;
     virtual FunctionType getType() const;

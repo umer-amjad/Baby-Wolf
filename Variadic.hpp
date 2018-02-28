@@ -25,6 +25,10 @@ class Variadic: public Function{
     
 public:
     Variadic(char o, std::vector<const Function*> fns);
+    Variadic(const Variadic& v);
+    
+    Variadic& operator=(Variadic v);
+    
     virtual double eval(double arg) const;
     virtual const Function* substitute(const Function* subFn) const;
     virtual FunctionType getType() const;
