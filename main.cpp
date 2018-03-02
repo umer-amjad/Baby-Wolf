@@ -18,7 +18,7 @@ int main(int argc, const char * argv[]) {
         if (myExpr == "q"){
             break;
         } else if (myExpr == "o"){
-            std::cout << "Enter a digit for to toggle corresponding option.\n"
+            std::cout << "Enter a digit to toggle corresponding option.\n"
                 << "True indicates that that display option will be used. Press d when done.\n";
             while(true){
                 std::cout << std::boolalpha;
