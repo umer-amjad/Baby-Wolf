@@ -22,7 +22,9 @@ char Function::getOp() const {
 }
 
 const Function* Function::simplify() const {
-    return this->wrap()->flatten()->collapse()->flatten();
+    const Function* simplified = this->wrap()->flatten()->collapse()->flatten();
+    user_functions.push_back(simplified);
+    return simplified;
 };
 
 std::pair<const Function*, std::vector<const Function*>> Function::getFns() const {
@@ -30,11 +32,16 @@ std::pair<const Function*, std::vector<const Function*>> Function::getFns() cons
 }
 
 std::ostream& operator<<(std::ostream& o, const Function& fn){
+    auto iter = std::find(Function::user_functions.begin(), Function::user_functions.end(), &fn);
+    int index = (int) (iter - Function::user_functions.begin());
+    if (iter == Function::user_functions.end()){
+        index = -1;
+    }
     if (Function::opts.prefix){
-        o << "(define (f{" << Function::user_functions.size() - 1 << "}" << " x) " << fn.getPrefixString() << ")\n";
+        o << "(define (f{" << index << "}" << " x) " << fn.getPrefixString() << ")\n";
     }
     if (Function::opts.infix){
-        o << "f{" << Function::user_functions.size() - 1 << "}" << "(x) = " << fn.getInfixString() << '\n';
+        o << "f{" << index << "}" << "(x) = " << fn.getInfixString() << '\n';
     }
     return o;
 }

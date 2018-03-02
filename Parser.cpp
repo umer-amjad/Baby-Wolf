@@ -31,7 +31,6 @@ const Function* parse(std::string expr){
     expr = cleanAbsolutes(expr);
     //std::cout << "Cleaned and now: " << expr << '\n'; //debug
     const Function* parsedFunction = parseToken(expr);
-    std::cout << "user function adding " << *parsedFunction << "address " << parsedFunction << std::endl;
     Function::user_functions.push_back(parsedFunction);
     return parsedFunction;
 }
@@ -135,12 +134,14 @@ const Function* parseToken(std::string expr){
     }
     
     //user defined functions
-    if (length >= 3 && expr.substr(0, 3) == "f_{"){
+    if (length >= 2 && expr.substr(0, 2) == "f{"){
         size_t digits = 0;
-        int i = std::stoi(expr.substr(3), &digits);
+        int i = std::stoi(expr.substr(2), &digits);
         if (i < Function::user_functions.size()){
-            std::cout << "user function i " << *Function::user_functions[i] << "address " << Function::user_functions[i] << std::endl;
-            return Function::user_functions[i]->substitute(parseToken(expr.substr(4+digits)));
+            return Function::user_functions[i]->substitute(parseToken(expr.substr(3+digits)));
+        }
+        else {
+            std::cerr << "Index for user defined function too large: Function " << i << " not yet defined" << std::endl;
         }
     }
     
