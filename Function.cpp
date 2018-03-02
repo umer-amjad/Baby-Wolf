@@ -25,7 +25,7 @@ const Function* Function::simplify() const {
     const Function* simplified = this->wrap()->flatten()->collapse()->flatten();
     user_functions.push_back(simplified);
     return simplified;
-};
+}
 
 std::pair<const Function*, std::vector<const Function*>> Function::getFns() const {
     return {nullptr, std::vector<const Function*>()};
