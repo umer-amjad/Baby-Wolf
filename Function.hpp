@@ -58,6 +58,9 @@ public:
     //Display options
     static Options opts;
     
+    //functions defined by the user already
+    static std::vector<const Function*> user_functions;
+    
     //evaluate function given argument
     virtual double eval(double arg) const = 0;
     

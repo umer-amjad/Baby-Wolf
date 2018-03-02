@@ -7,6 +7,7 @@
 #include "Function.hpp"
 
 Options Function::opts{true, false};
+std::vector<const Function*> Function::user_functions{};
 
 const Function* Function::wrap() const {
     return this;
@@ -30,10 +31,10 @@ std::pair<const Function*, std::vector<const Function*>> Function::getFns() cons
 
 std::ostream& operator<<(std::ostream& o, const Function& fn){
     if (Function::opts.prefix){
-        o << "(define (f x) " << fn.getPrefixString() << ")\n";
+        o << "(define (f{" << Function::user_functions.size() - 1 << "}" << " x) " << fn.getPrefixString() << ")\n";
     }
     if (Function::opts.infix){
-        o << "f(x) = " << fn.getInfixString() << '\n';
+        o << "f{" << Function::user_functions.size() - 1 << "}" << "(x) = " << fn.getInfixString() << '\n';
     }
     return o;
 }

@@ -30,7 +30,10 @@ const Function* parse(std::string expr){
     }
     expr = cleanAbsolutes(expr);
     //std::cout << "Cleaned and now: " << expr << '\n'; //debug
-    return parseToken(expr);
+    const Function* parsedFunction = parseToken(expr);
+    std::cout << "user function adding " << *parsedFunction << "address " << parsedFunction << std::endl;
+    Function::user_functions.push_back(parsedFunction);
+    return parsedFunction;
 }
 
 bool bracketCheck(std::string expr){
@@ -128,6 +131,16 @@ const Function* parseToken(std::string expr){
         int trigFnLength = (int) trigFn.length();
         if (length >= trigFnLength && expr.substr(0, trigFnLength) == trigFn){
             return new Unary(trigFn, parseToken(expr.substr(trigFnLength, length - trigFnLength)));
+        }
+    }
+    
+    //user defined functions
+    if (length >= 3 && expr.substr(0, 3) == "f_{"){
+        size_t digits = 0;
+        int i = std::stoi(expr.substr(3), &digits);
+        if (i < Function::user_functions.size()){
+            std::cout << "user function i " << *Function::user_functions[i] << "address " << Function::user_functions[i] << std::endl;
+            return Function::user_functions[i]->substitute(parseToken(expr.substr(4+digits)));
         }
     }
     

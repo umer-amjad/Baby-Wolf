@@ -39,17 +39,17 @@ int main(int argc, const char * argv[]) {
             }
             continue;
         }
-        std::unique_ptr<const Function> f(parse(myExpr));
+        const Function* f(parse(myExpr));
         if (f == nullptr)
             continue;
         std::cout << "Function is: " << '\n';
         std::cout << *f;
-        std::unique_ptr<const Function> simpleF(f->simplify());
+        const Function* simpleF(f->simplify());
         std::cout << "Simplified function is: " << '\n';
         std::cout << *simpleF;
-        std::cout << "Substituted function using  is: x^2+sin(cos(x))" << '\n';
-        const Function* sub = f->substitute(subTest);
-        std::cout << *sub;
+//        std::cout << "Substituted function using  is: x^2+sin(cos(x))" << '\n';
+//        const Function* sub = f->substitute(subTest);
+//        std::cout << *sub;
 //        std::cout << "Original function is: " << '\n';
 //        std::cout << "f(x) = " << *f << '\n';
         std::cout << "Enter argument: " << '\n';
