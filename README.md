@@ -26,7 +26,7 @@ Features to be added recently include:
   - ~~inverses to the hyperbolic trig functions~~
   - logarithms
 - Display LaTeX string of inputted function
-- Parse absolute valued expressions in a smarter way, in particular recognizing and differentiating the "starting" vertical bar and the "ending" vertical bar
+- ~~Parse absolute valued expressions in a smarter way, in particular recognizing and differentiating the "starting" vertical bar and the "ending" vertical bar~~
 - ~~Allow user defined functions to be used in future function definitions, allowing for function substitution within a user defined function, e.g. "f_1(x) = x+3", "f_2(x) = x(x+1)*f_1(x^2)"~~
 - ~~Improve the interface and add option for changing string output type in CLI~~
 
