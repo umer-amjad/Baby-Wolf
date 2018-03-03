@@ -17,9 +17,9 @@
 
 // overall structure:
 // parse wraps everything, calls absoluteValueSubstitution once, and calls parseToken once
-// bracketCheck makes sure the input has a correct bracket structure
 // parseToken and tokenize are then mutually recursive
 // absoluteValueSubstitution changes | symbol to < and > symbols, for opening and closing abs
+//  and also does bracket symbols and absolute value symbols error checking
 
 //returns pointer to function constructed from expr, nullptr if there is an error
 const Function* parse(std::string expr);
