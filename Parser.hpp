@@ -16,22 +16,22 @@
 #include "Variadic.hpp"
 
 // overall structure:
-// parse wraps everything, calls cleanAbsolutes once, and calls parseToken once
+// parse wraps everything, calls absoluteValueSubstitution once, and calls parseToken once
 // bracketCheck makes sure the input has a correct bracket structure
 // parseToken and tokenize are then mutually recursive
-// cleanAbsolutes is called during parseToken, if the token is surrounded by brackets
-// to add multiplication symbols between absolute value symbols if needed
+// absoluteValueSubstitution changes | symbol to < and > symbols, for opening and closing abs
 
+//returns pointer to function constructed from expr, nullptr if there is an error
 const Function* parse(std::string expr);
 
-bool bracketCheck(std::string expr);
+// if error during parsing, returns {"", false}, otherwise returns
+// the absolute value substituted string with true as second.
+std::pair<std::string, bool> absoluteValueSubstitution(std::string expr);
 
-std::string cleanAbsolutes(std::string expr);
-
-std::pair<std::string, bool> cleanAbsolutes2(std::string expr);
-
+// mutually recursive with tokenize; parses all expressions
 const Function* parseToken(std::string expr);
 
+// mutually recursive with parseToken; splits variadic expressions and calls parseToken on each
 const Function* tokenize(std::string expr, char op);
 
 #endif /* Parser_hpp */

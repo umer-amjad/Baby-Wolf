@@ -19,7 +19,7 @@ const Function* parse(std::string expr){
                               }),
                expr.end());
     int i = 0;
-    std::pair<std::string, bool> expr_valid = cleanAbsolutes2(expr);
+    std::pair<std::string, bool> expr_valid = absoluteValueSubstitution(expr);
     if (!expr_valid.second){
         return nullptr;
     }
@@ -33,40 +33,14 @@ const Function* parse(std::string expr){
         }
         i++;
     }
-    //std::cout << "Cleaned and now: " << expr << '\n'; //debug
+    // std::cout << "Cleaned and now: " << expr << '\n'; //debug
     const Function* parsedFunction = parseToken(expr);
+    // std::cout << "Function is " << *parsedFunction << std::endl; //debug
     Function::user_functions.push_back(parsedFunction);
     return parsedFunction;
 }
 
-bool bracketCheck(std::string expr){
-    int brackets = 0;
-    int length = (int) expr.size();
-    bool invalid = false;
-    int err = 0;
-    for (int i = 0; i < length; i++){
-        if (expr[i] == '(')
-            ++brackets;
-        else if (expr[i] == ')')
-            --brackets;
-        if (brackets < 0){
-            invalid = true;
-            err = i;
-            break;
-        }
-    }
-    if (brackets > 0){
-        invalid = true;
-        err = length;
-    }
-    if (invalid){
-        std::cout << "Parse error: check brackets at position " << err << '\n';
-        return false;
-    }
-    return true;
-}
-
-std::pair<std::string, bool> cleanAbsolutes2(std::string expr){
+std::pair<std::string, bool> absoluteValueSubstitution(std::string expr){
     int bracketLevel = 0;
     std::map<int, int> bracketToAbs;
     bracketToAbs[0] = 0;
@@ -77,6 +51,7 @@ std::pair<std::string, bool> cleanAbsolutes2(std::string expr){
         }
         if (bracketLevel < 0){
             std::cerr << "Parse error at position " << i << ": too many closing parentheses" << std::endl;
+            return {"", false};
         }
         char& symbol = expr[i];
         switch (symbol){
@@ -114,44 +89,15 @@ std::pair<std::string, bool> cleanAbsolutes2(std::string expr){
         }
         ++i;
     }
-    if (bracketLevel != 0){
+    if (bracketLevel > 0){
         std::cerr << "Parse error at position " << i << ": missing closing parenthesis" << std::endl;
+        return {"", false};
+    }
+    if (bracketLevel < 0){
+        std::cerr << "Parse error at position " << i << ": too many closing parentheses" << std::endl;
+        return {"", false};
     }
     return {expr, true};
-}
-
-std::string cleanAbsolutes(std::string expr){
-    int i = 0;
-    bool inAbs = false;
-    int brackets = 0;
-    while (true){
-        //std::cout << "At i: " << i << " expr is " << expr << '\n'; //debug
-        if (i >= expr.length() - 1)
-            break;
-        if (expr[i] == '(')
-            brackets++;
-        if (expr[i] == ')')
-            brackets--;
-        if (brackets != 0){
-            i++;
-            continue;
-        }
-        if (expr[i] == '|'){
-            inAbs = !inAbs; //toggle
-        }
-        if (inAbs && expr[i+1] == '|'){
-            i++;
-            continue; //don't add * between inside arg and | char
-        }
-        if ((  (('0' <= expr[i] && expr[i] <= '9') || expr[i] == ')' || expr[i] == '|' || expr[i] == 'x' || expr[i] == 'i' || expr[i] == 'e')
-             && (expr[i+1] == '|'))
-            || (expr[i] == '|' && (expr[i+1] == '(' || expr[i+1] == 'x' || expr[i+1] == 'p' || expr[i+1] == 'e') && !inAbs)){
-            expr.insert(i+1, "*");
-        }
-        i++;
-    }
-    // std::cout << "Cleaned and now: " << expr << '\n'; //debug
-    return expr;
 }
 
 const Function* parseToken(std::string expr){
@@ -205,7 +151,7 @@ const Function* parseToken(std::string expr){
     
     //then brackets
     if (expr[0] == '('){
-        return (parseToken(cleanAbsolutes(expr.substr(1, length - 2))));
+        return parseToken(expr.substr(1, length - 2));
     }
     if (expr == "pi"){
         return new Constant(M_PI);
