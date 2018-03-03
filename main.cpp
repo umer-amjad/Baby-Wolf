@@ -3,13 +3,37 @@
 //  BabyWolf
 //
 //
+#include <assert.h>
 
 #include "Parser.hpp"
 
 //see notes in Parser.hpp and Function.hpp
 
+//return true if no errors, false if any errors caught
+
+bool testAbsoluteValueCleaner(){
+    try {
+        assert(cleanAbsolutes2("|x+|x+5|+19|").first == "<x+<x+5>+19>");
+        assert(cleanAbsolutes2("|x+|x^|x-|x/|x+3|||||").first == "<x+<x^<x-<x/<x+3>>>>>");
+        assert(cleanAbsolutes2("|x+|x^|x-|x/|x+3|-1|+2|-3|+4|").first == "<x+<x^<x-<x/<x+3>-1>+2>-3>+4>");
+        assert(cleanAbsolutes2("|x|x+5|x|").first == "<x>x+5<x>");
+        assert(cleanAbsolutes2("|x+(3x^2+|x+5|+17)+19x|").first == "<x+(3x^2+<x+5>+17)+19x>");
+        assert(cleanAbsolutes2("|x+(3x^2+|x+|x^|x-|x/|x+3|-1|+2|-3|+4|+17)+19x|").first == "<x+(3x^2+<x+<x^<x-<x/<x+3>-1>+2>-3>+4>+17)+19x>");
+        assert(cleanAbsolutes2("x+|x+5|+19").first == "x+<x+5>+19");
+        assert(cleanAbsolutes2("x+|x+(x^2+|x^3+(x-|5+3|*3)+5|-5)|+19").first == "x+<x+(x^2+<x^3+(x-<5+3>*3)+5>-5)>+19");
+        assert(cleanAbsolutes2("x+|x+(x^2+|x^3+(x-|5+3|*3)+5|-5)+|3x+5|+2|+19").first == "x+<x+(x^2+<x^3+(x-<5+3>*3)+5>-5)+<3x+5>+2>+19");
+    } catch (const std::exception& e) {
+        std::cerr << e.what() << std::endl;
+        return false;
+    }
+    return true;
+}
+
 int main(int argc, const char * argv[]) {
     Function::opts = {true, false};
+    if (testAbsoluteValueCleaner()){
+        std::cout << "Absolute value cleaner tests passed!" << std::endl;
+    };
     while (true) {
         double arg = 0;
         std::string myExpr;

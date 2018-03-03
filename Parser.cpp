@@ -4,6 +4,8 @@
 //
 //
 
+#include <map>
+
 #include "Parser.hpp"
 
 const std::vector<char> ops{'+', '-', '*', '/', '^'};
@@ -16,19 +18,21 @@ const Function* parse(std::string expr){
                                   return std::isspace(c);
                               }),
                expr.end());
-    if (!bracketCheck(expr)) //doesn't pass bracket check
-        return nullptr;
     int i = 0;
+    std::pair<std::string, bool> expr_valid = cleanAbsolutes2(expr);
+    if (!expr_valid.second){
+        return nullptr;
+    }
+    expr = expr_valid.first;
     while (true){
         if (i == expr.length() - 1)
             break;
-        if ((('0' <= expr[i] && expr[i] <= '9') || expr[i] == ')' || expr[i] == 'x' || expr[i] == 'i' || expr[i] == 'e')
-            && (expr[i+1] == 'x' || expr[i+1] == '(' || expr[i+1] == 'p' || expr[i+1] == 'e')){
+        if ((('0' <= expr[i] && expr[i] <= '9') || expr[i] == ')' || expr[i] == '>' || expr[i] == 'x' || expr[i] == 'i' || expr[i] == 'e')
+            && (expr[i+1] == 'x' || expr[i+1] == '(' || expr[i+1] == '<' || expr[i+1] == 'p' || expr[i+1] == 'e')){
             expr.insert(i+1, "*");
         }
         i++;
     }
-    expr = cleanAbsolutes(expr);
     //std::cout << "Cleaned and now: " << expr << '\n'; //debug
     const Function* parsedFunction = parseToken(expr);
     Function::user_functions.push_back(parsedFunction);
@@ -60,6 +64,60 @@ bool bracketCheck(std::string expr){
         return false;
     }
     return true;
+}
+
+std::pair<std::string, bool> cleanAbsolutes2(std::string expr){
+    int bracketLevel = 0;
+    std::map<int, int> bracketToAbs;
+    bracketToAbs[0] = 0;
+    int i = 0;
+    while(true){
+        if (i == expr.length()){
+            break;
+        }
+        if (bracketLevel < 0){
+            std::cerr << "Parse error at position " << i << ": too many closing parentheses" << std::endl;
+        }
+        char& symbol = expr[i];
+        switch (symbol){
+            case '(':
+                ++bracketLevel;
+                bracketToAbs[bracketLevel] = 0;
+                break;
+            case ')':
+                if (bracketToAbs[bracketLevel] != 0){
+                    std::cerr << "Parse error at position " << i << ": could not find closing absolute value symbol" << std::endl;
+                    return {"", false};
+                }
+                --bracketLevel;
+                break;
+            case '|':
+                if (bracketToAbs[bracketLevel] == 0){
+                    symbol = '<';
+                    ++bracketToAbs[bracketLevel];
+                    break;
+                }
+                if (i > 0 && std::find(ops.begin(), ops.end(), expr[i-1]) != ops.end()){
+                    symbol = '<';
+                    ++bracketToAbs[bracketLevel];
+                    break;
+                }
+                if (bracketToAbs[bracketLevel] > 0) {
+                    symbol = '>';
+                    --bracketToAbs[bracketLevel];
+                    break;
+                }
+                std::cerr << "Undefined behaviour at position " << i << ": contact Umer" << std::endl;
+                return {"", false};
+            default:
+                break;
+        }
+        ++i;
+    }
+    if (bracketLevel != 0){
+        std::cerr << "Parse error at position " << i << ": missing closing parenthesis" << std::endl;
+    }
+    return {expr, true};
 }
 
 std::string cleanAbsolutes(std::string expr){
@@ -121,7 +179,7 @@ const Function* parseToken(std::string expr){
     }
     
     //absolute value
-    if (expr[0] == '|'){
+    if (expr[0] == '<'){
         return new Unary("abs", parseToken(expr.substr(1, length - 2)));
     }
     
@@ -164,7 +222,7 @@ const Function* tokenize(std::string expr, char op){
     int length = (int) expr.size();
     const Function* f = nullptr;
     int brackets = 0;
-    bool inAbs = false; //toggle between in and out of abs
+    int abs = 0;
     int substringStart = 0;
     int substringLength = 0;
     std::vector<const Function*> fns;
@@ -174,9 +232,12 @@ const Function* tokenize(std::string expr, char op){
             ++brackets;
         else if (expr[i] == ')')
             --brackets;
-        else if (expr[i] == '|')
-            inAbs = !inAbs;
-        else if (brackets == 0 && (expr[i] == op && !inAbs && i > 0)){
+        else if (expr[i] == '<')
+            ++abs;
+        else if (expr[i] == '>')
+            --abs;
+        //check i > 0 for if - is in front
+        else if (brackets == 0 && abs == 0 && expr[i] == op && i > 0){
             //length - 1 because don't take op char:
             fns.emplace_back(parseToken(expr.substr(substringStart, substringLength - 1)));
             substringStart = i + 1;

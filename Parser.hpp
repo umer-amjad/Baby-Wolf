@@ -28,6 +28,8 @@ bool bracketCheck(std::string expr);
 
 std::string cleanAbsolutes(std::string expr);
 
+std::pair<std::string, bool> cleanAbsolutes2(std::string expr);
+
 const Function* parseToken(std::string expr);
 
 const Function* tokenize(std::string expr, char op);
