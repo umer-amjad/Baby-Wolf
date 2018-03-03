@@ -49,10 +49,6 @@ std::pair<std::string, bool> absoluteValueSubstitution(std::string expr){
         if (i == expr.length()){
             break;
         }
-        if (bracketLevel < 0){
-            std::cerr << "Parse error at position " << i << ": too many closing parentheses" << std::endl;
-            return {"", false};
-        }
         char& symbol = expr[i];
         switch (symbol){
             case '(':
@@ -60,6 +56,10 @@ std::pair<std::string, bool> absoluteValueSubstitution(std::string expr){
                 bracketToAbs[bracketLevel] = 0;
                 break;
             case ')':
+                if (bracketLevel == 0){
+                    std::cerr << "Parse error at position " << i << ": too many closing parentheses" << std::endl;
+                    return {"", false};
+                }
                 if (bracketToAbs[bracketLevel] != 0){
                     std::cerr << "Parse error at position " << i << ": could not find closing absolute value symbol" << std::endl;
                     return {"", false};
@@ -95,6 +95,10 @@ std::pair<std::string, bool> absoluteValueSubstitution(std::string expr){
     }
     if (bracketLevel < 0){
         std::cerr << "Parse error at position " << i << ": too many closing parentheses" << std::endl;
+        return {"", false};
+    }
+    if (bracketToAbs[0] != 0){
+        std::cerr << "Parse error at position " << i << ": could not find closing absolute value symbol" << std::endl;
         return {"", false};
     }
     return {expr, true};
