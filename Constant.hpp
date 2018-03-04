@@ -22,7 +22,7 @@ public:
     Constant& operator=(Constant c);
 
     virtual double eval(double arg) const;
-    virtual const Function* substitute(const Function* subFn) const;
+    virtual Function* substitute(const Function* subFn) const;
     virtual std::string getPrefixString() const;
     virtual std::string getInfixString() const;
     virtual FunctionType getType() const;

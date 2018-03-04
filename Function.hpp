@@ -11,6 +11,7 @@
 #include <sstream>
 #include <iostream>
 #include <iomanip> //for decimal output
+#include <map>
 #include <cmath>
 #include <memory>
 #include <vector>
@@ -61,16 +62,19 @@ public:
     static Options opts;
     
     //functions defined by the user already
-    static std::vector<const Function*> userFunctions;
+    static std::map<std::string, const Function*> userFunctions;
     
     //evaluate function given argument
     virtual double eval(double arg) const = 0;
     
     //return this function but subtitute x with fn
-    virtual const Function* substitute(const Function* subFn) const = 0;
+    virtual Function* substitute(const Function* subFn) const = 0;
     
     //returns arithmetically simplified function - NOTE: returns new-ly allocated function
     const Function* simplify() const;
+    
+    //returns true if existing function with that name already exists
+    bool setName(std::string name);
     
     //overload ostream operator to return string
     friend std::ostream& operator<<(std::ostream& o, const Function& fn);

@@ -13,16 +13,27 @@ const std::vector<std::string> trigFns{"asinh", "acosh", "atanh", "asech", "acsc
 
 const Function* parse(std::string expr){
     //remove spaces:
+    bool hasName = false;
+    std::string functionName;
     expr.erase(std::remove_if(expr.begin(), expr.end(),
                               [](unsigned char c){
                                   return std::isspace(c);
                               }),
                expr.end());
-    int i = 0;
+    auto equalSignPos = expr.find('=');
+    if (equalSignPos != std::string::npos){
+        functionName = expr.substr(0, equalSignPos - 3);
+        expr = expr.substr(equalSignPos + 1);
+        hasName = true;
+    } else {
+        functionName = "f{" + std::to_string(Function::userFunctions.size()) +"}";
+    }
     std::pair<std::string, bool> exprValid = absoluteValueSubstitution(expr);
     if (!exprValid.second){
         return nullptr;
     }
+    
+    int i = 0;
     expr = exprValid.first;
     while (true){
         if (i == expr.length() - 1)
@@ -34,9 +45,10 @@ const Function* parse(std::string expr){
         i++;
     }
     // std::cout << "Cleaned and now: " << expr << '\n'; //debug
-    const Function* parsedFunction = parseToken(expr);
+    Function* parsedFunction = parseToken(expr);
+    parsedFunction->setName(functionName);
     // std::cout << "Function is " << *parsedFunction << std::endl; //debug
-    Function::userFunctions.push_back(parsedFunction);
+    Function::userFunctions.insert({functionName, parsedFunction});
     return parsedFunction;
 }
 
@@ -104,10 +116,10 @@ std::pair<std::string, bool> absoluteValueSubstitution(std::string expr){
     return {expr, true};
 }
 
-const Function* parseToken(std::string expr){
+Function* parseToken(std::string expr){
     //   std::cout << "Here 0 " << expr << '\n'; //debug
     int length = (int) expr.size();
-    const Function* f = nullptr;
+    Function* f = nullptr;
     if (length == 1){
         if (expr == "x"){
             f = new Argument;
@@ -142,14 +154,11 @@ const Function* parseToken(std::string expr){
     }
     
     //user defined functions
-    if (length >= 2 && expr.substr(0, 2) == "f{"){
-        size_t digits = 0;
-        int i = std::stoi(expr.substr(2), &digits);
-        if (i < Function::userFunctions.size()){
-            return Function::userFunctions[i]->substitute(parseToken(expr.substr(3+digits)));
-        }
-        else {
-            std::cerr << "Index for user defined function too large: Function " << i << " not yet defined" << std::endl;
+    for (auto& userFn : Function::userFunctions){
+        //return must be first character, position 0
+        if (expr.find(userFn.first) == 0){
+            int nameSize = (int) userFn.first.size();
+            return userFn.second->substitute(parseToken(expr.substr(nameSize)));
         }
     }
     
@@ -168,9 +177,9 @@ const Function* parseToken(std::string expr){
     return f;
 }
 
-const Function* tokenize(std::string expr, char op){
+Function* tokenize(std::string expr, char op){
     int length = (int) expr.size();
-    const Function* f = nullptr;
+    Function* f = nullptr;
     int brackets = 0;
     int abs = 0;
     int substringStart = 0;

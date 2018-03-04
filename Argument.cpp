@@ -14,7 +14,7 @@ double Argument::eval(double arg) const {
     return arg;
 }
 
-const Function* Argument::substitute(const Function* subFn) const {
+Function* Argument::substitute(const Function* subFn) const {
     return subFn->copy();
 }
 

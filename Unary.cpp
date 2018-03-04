@@ -83,7 +83,7 @@ double Unary::eval(double arg) const{
     return 0;
 }
 
-const Function* Unary::substitute(const Function* subFn) const {
+Function* Unary::substitute(const Function* subFn) const {
     return new Unary(op, fn->substitute(subFn));
 }
 

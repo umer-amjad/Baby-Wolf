@@ -26,7 +26,7 @@ double Constant::eval(double arg) const {
     return val;
 }
 
-const Function* Constant::substitute(const Function* subFn) const {
+Function* Constant::substitute(const Function* subFn) const {
     return new Constant(*this);
 }
 

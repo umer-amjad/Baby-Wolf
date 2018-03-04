@@ -29,9 +29,9 @@ const Function* parse(std::string expr);
 std::pair<std::string, bool> absoluteValueSubstitution(std::string expr);
 
 // mutually recursive with tokenize; parses all expressions
-const Function* parseToken(std::string expr);
+Function* parseToken(std::string expr);
 
 // mutually recursive with parseToken; splits variadic expressions and calls parseToken on each
-const Function* tokenize(std::string expr, char op);
+Function* tokenize(std::string expr, char op);
 
 #endif /* Parser_hpp */

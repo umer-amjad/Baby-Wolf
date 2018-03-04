@@ -28,7 +28,7 @@ public:
     Unary& operator=(Unary u);
 
     virtual double eval(double arg) const;
-    virtual const Function* substitute(const Function* subFn) const;
+    virtual Function* substitute(const Function* subFn) const;
     virtual FunctionType getType() const;
     virtual char getOp() const;
     virtual std::pair<const Function*, std::vector<const Function*>> getFns() const;
