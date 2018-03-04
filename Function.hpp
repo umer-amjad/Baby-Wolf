@@ -28,6 +28,8 @@ class Function {
     friend class Unary;
     friend class Argument;
     
+    std::string functionName;
+    
     //wraps use of "-" and "/" variadics with "neg" and "inv" unaries - not new-ly allocated except for new unaries
     virtual const Function* wrap() const;
     
@@ -59,7 +61,7 @@ public:
     static Options opts;
     
     //functions defined by the user already
-    static std::vector<const Function*> user_functions;
+    static std::vector<const Function*> userFunctions;
     
     //evaluate function given argument
     virtual double eval(double arg) const = 0;

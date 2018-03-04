@@ -19,11 +19,11 @@ const Function* parse(std::string expr){
                               }),
                expr.end());
     int i = 0;
-    std::pair<std::string, bool> expr_valid = absoluteValueSubstitution(expr);
-    if (!expr_valid.second){
+    std::pair<std::string, bool> exprValid = absoluteValueSubstitution(expr);
+    if (!exprValid.second){
         return nullptr;
     }
-    expr = expr_valid.first;
+    expr = exprValid.first;
     while (true){
         if (i == expr.length() - 1)
             break;
@@ -36,7 +36,7 @@ const Function* parse(std::string expr){
     // std::cout << "Cleaned and now: " << expr << '\n'; //debug
     const Function* parsedFunction = parseToken(expr);
     // std::cout << "Function is " << *parsedFunction << std::endl; //debug
-    Function::user_functions.push_back(parsedFunction);
+    Function::userFunctions.push_back(parsedFunction);
     return parsedFunction;
 }
 
@@ -145,8 +145,8 @@ const Function* parseToken(std::string expr){
     if (length >= 2 && expr.substr(0, 2) == "f{"){
         size_t digits = 0;
         int i = std::stoi(expr.substr(2), &digits);
-        if (i < Function::user_functions.size()){
-            return Function::user_functions[i]->substitute(parseToken(expr.substr(3+digits)));
+        if (i < Function::userFunctions.size()){
+            return Function::userFunctions[i]->substitute(parseToken(expr.substr(3+digits)));
         }
         else {
             std::cerr << "Index for user defined function too large: Function " << i << " not yet defined" << std::endl;
