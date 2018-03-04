@@ -31,6 +31,10 @@ std::pair<const Function*, std::vector<const Function*>> Function::getFns() cons
     return {nullptr, std::vector<const Function*>()};
 }
 
+std::string Function::getName() const {
+    return functionName;
+}
+
 bool Function::setName(std::string name){
     this->functionName = name;
     auto userFnIter = userFunctions.find(name);
@@ -50,7 +54,7 @@ std::ostream& operator<<(std::ostream& o, const Function& fn){
 //    }
     std::string name = fn.functionName;
     if (name == ""){
-        name = "__unnamed";
+        name = "unnamed";
     }
     if (Function::opts.prefix){
         o << "(define (" << name << " x) " << fn.getPrefixString() << ")\n";

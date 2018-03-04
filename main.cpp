@@ -55,7 +55,7 @@ int main(int argc, const char * argv[]) {
 //        std::cout << "f(x) = " << *f << '\n';
         std::cout << "Enter argument: " << '\n';
         std::cin >> arg;
-        std::cout << "f(" << arg << ") = " << simpleF->eval(arg) << '\n';
+        std::cout << f->getName() << "(" << arg << ") = " << simpleF->eval(arg) << '\n';
         std::cin.ignore();
      }
 }

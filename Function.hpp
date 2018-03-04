@@ -73,6 +73,9 @@ public:
     //returns arithmetically simplified function - NOTE: returns new-ly allocated function
     const Function* simplify() const;
     
+    //returns function name
+    std::string getName() const;
+    
     //returns true if existing function with that name already exists
     bool setName(std::string name);
     
