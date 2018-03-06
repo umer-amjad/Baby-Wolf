@@ -22,6 +22,8 @@ enum FunctionType {VARIADIC, UNARY, ARGUMENT, CONSTANT};
 struct Options {
     bool prefix;
     bool infix;
+    bool simplify;
+    bool evaluate;
 };
 
 class Function {

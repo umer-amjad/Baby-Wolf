@@ -11,24 +11,25 @@
 //return true if no errors, false if any errors caught
 
 int main(int argc, const char * argv[]) {
-    Function::opts = {true, false};
     if (testAll()){
         std::cout << "All tests passed!" << std::endl;
     };
     while (true) {
         double arg = 0;
         std::string myExpr;
-        std::cout << "Enter function, q to quit, or o for display options: " << std::endl;
+        std::cout << "Enter function, q to quit, or o for options: " << std::endl;
         getline(std::cin, myExpr);
         if (myExpr == "q"){
             break;
         } else if (myExpr == "o"){
             std::cout << "Enter a digit to toggle corresponding option.\n"
-                << "True indicates that that display option will be used. Press d when done.\n";
+                << "True indicates that that option will be used. Press d when done.\n";
             while(true){
                 std::cout << std::boolalpha;
                 std::cout << "0: Prefix: " << Function::opts.prefix << '\n';
                 std::cout << "1: Infix: " << Function::opts.infix << std::endl;
+                std::cout << "2: Simplify: " << Function::opts.simplify << std::endl;
+                std::cout << "3: Evaluate: " << Function::opts.evaluate << std::endl;
                 std::string displayOption;
                 getline(std::cin, displayOption);
                 if (displayOption == "d"){
@@ -37,6 +38,10 @@ int main(int argc, const char * argv[]) {
                     Function::opts.prefix = !Function::opts.prefix;
                 } else if (displayOption == "1"){
                     Function::opts.infix = !Function::opts.infix;
+                } else if (displayOption == "2"){
+                    Function::opts.simplify = !Function::opts.simplify;
+                } else if (displayOption == "3"){
+                    Function::opts.evaluate = !Function::opts.evaluate;
                 } else {
                     std::cout << "Please enter d, 0, or 1\n";
                 }
@@ -48,15 +53,17 @@ int main(int argc, const char * argv[]) {
             continue;
         std::cout << "Function is: " << '\n';
         std::cout << *f;
-        const Function* simpleF(f->simplify());
-        std::cout << "Simplified function is: " << '\n';
-        std::cout << *simpleF;
-//        std::cout << "Original function is: " << '\n';
-//        std::cout << "f(x) = " << *f << '\n';
-        std::cout << "Enter argument: " << '\n';
-        std::cin >> arg;
-        std::cout << f->getName() << "(" << arg << ") = " << simpleF->eval(arg) << '\n';
-        std::cin.ignore();
+        if (Function::opts.simplify){
+            const Function* simpleF(f->simplify());
+            std::cout << "Simplified function is: " << '\n';
+            std::cout << *simpleF;
+        }
+        if (Function::opts.evaluate){
+            std::cout << "Enter argument: " << std::endl;
+            std::cin >> arg;
+            std::cout << f->getName() << "(" << arg << ") = " << f->eval(arg) << '\n';
+            std::cin.ignore();
+        }
      }
 }
 

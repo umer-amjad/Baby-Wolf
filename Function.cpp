@@ -6,7 +6,7 @@
 
 #include "Function.hpp"
 
-Options Function::opts{true, false};
+Options Function::opts{true, false, false, true};
 std::map<std::string, const Function*> Function::userFunctions{};
 
 const Function* Function::wrap() const {
