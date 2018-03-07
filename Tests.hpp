@@ -53,8 +53,28 @@ bool testAbsoluteValueEvaluator(){
     return true;
 }
 
+bool testFunctionSubstitution(){
+    try {
+        double EPSILON = 0.000000001;
+        assert(abs(parse("f(x) = sin(x)+cos(x)")->eval(0.5) - 1.3570081) < EPSILON);
+        assert(abs(parse("g(x) = sin(x)+cos(x)")->eval(M_PI) - (-1)) < EPSILON);
+        assert(abs(parse("yo(x) = f(x^2)")->eval(0.35) - 1.11470010531) < EPSILON);
+        assert(abs(parse("yo(5)")->eval(0) - 0.858851061766) < EPSILON);
+        assert(abs(parse("yo(5)")->eval(0.5839) - 0.858851061766) < EPSILON);
+        assert(abs(parse("yo(5)")->eval(500) - 0.858851061766) < EPSILON);
+        assert(abs(parse("hey(x) = f(x-1)+yo(x+1)")->eval(25) - (-1.85907157456)) < EPSILON);
+        assert(abs(parse("hey(20)")->eval(500.39) - (2.44572244849)) < EPSILON);
+        assert(abs(parse("hey(13.978)")->eval(29292.1) - (0.0768476566483)) < EPSILON);
+
+    } catch (const std::exception& e) {
+        std::cerr << e.what() << std::endl;
+        return false;
+    }
+    return true;
+}
+
 bool testAll(){
-    if(testAbsoluteValueCleaner() && testAbsoluteValueEvaluator()){
+    if(testAbsoluteValueCleaner() && testAbsoluteValueEvaluator() && testFunctionSubstitution()){
         return true;
     }
     return false;
