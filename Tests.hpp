@@ -57,7 +57,7 @@ bool testFunctionSubstitution(){
     try {
         double EPSILON = 0.000000001;
         assert(abs(parse("f(x) = sin(x)+cos(x)")->eval(0.5) - 1.3570081) < EPSILON);
-        assert(abs(parse("g(x) = sin(x)+cos(x)")->eval(M_PI) - (-1)) < EPSILON);
+        assert(abs(parse("h(x) = sin(x)+cos(x)")->eval(M_PI) - (-1)) < EPSILON);
         assert(abs(parse("yo(x) = f(x^2)")->eval(0.35) - 1.11470010531) < EPSILON);
         assert(abs(parse("yo(5)")->eval(0) - 0.858851061766) < EPSILON);
         assert(abs(parse("yo(5)")->eval(0.5839) - 0.858851061766) < EPSILON);

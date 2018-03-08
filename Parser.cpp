@@ -154,11 +154,11 @@ Function* parseToken(std::string expr){
     }
     
     //user defined functions
-    for (auto& userFn : Function::userFunctions){
+    for (auto userFnIter = Function::userFunctions.rbegin(); userFnIter != Function::userFunctions.rend(); ++userFnIter){
         //return must be first character, position 0
-        if (expr.find(userFn.first) == 0){
-            int nameSize = (int) userFn.first.size();
-            return userFn.second->substitute(parseToken(expr.substr(nameSize)));
+        if (expr.find(userFnIter->first) == 0){
+            int nameSize = (int) userFnIter->first.size();
+            return userFnIter->second->substitute(parseToken(expr.substr(nameSize)));
         }
     }
     
