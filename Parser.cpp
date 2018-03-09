@@ -137,7 +137,7 @@ Function* parseToken(std::string expr){
     
     // negatives
     if (expr[0] == '-'){
-        return new Unary("neg", parseToken(expr.substr(1, length - 1)));
+        return new Unary("neg", parseToken(expr.substr(1)));
     }
     
     //absolute value
@@ -149,7 +149,7 @@ Function* parseToken(std::string expr){
     for (auto trigFn : trigFns){
         int trigFnLength = (int) trigFn.length();
         if (length >= trigFnLength && expr.substr(0, trigFnLength) == trigFn){
-            return new Unary(trigFn, parseToken(expr.substr(trigFnLength, length - trigFnLength)));
+            return new Unary(trigFn, parseToken(expr.substr(trigFnLength)));
         }
     }
     
@@ -204,7 +204,7 @@ Function* tokenize(std::string expr, char op){
         }
     }
     if (substringStart > 0){
-        fns.emplace_back(parseToken(expr.substr(substringStart, length - substringStart)));
+        fns.emplace_back(parseToken(expr.substr(substringStart)));
         f = new Variadic(op, fns);
     }
     return f;
