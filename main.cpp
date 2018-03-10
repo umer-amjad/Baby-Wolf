@@ -42,7 +42,7 @@ void setOptions(){
 int main(int argc, const char * argv[]) {
     if (testAll()){
         std::cout << "All tests passed!" << std::endl;
-    };
+    }
     while (true) {
         double arg = 0;
         std::string myExpr;
@@ -70,7 +70,7 @@ int main(int argc, const char * argv[]) {
             std::cout << f->getName() << "(" << arg << ") = " << f->eval(arg) << '\n';
             std::cin.ignore();
         }
-     }
+    }
 }
 
 //test cases:
