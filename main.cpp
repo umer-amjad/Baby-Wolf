@@ -8,6 +8,35 @@
 
 //see notes in Parser.hpp and Function.hpp
 
+//set options:
+
+void setOptions(){
+    std::cout << "Enter a digit to toggle corresponding option.\n"
+    << "True indicates that that option will be used. Press d when done.\n";
+    while(true){
+        std::cout << std::boolalpha;
+        std::cout << "0: Prefix: " << Function::opts.prefix << '\n';
+        std::cout << "1: Infix: " << Function::opts.infix << std::endl;
+        std::cout << "2: Simplify: " << Function::opts.simplify << std::endl;
+        std::cout << "3: Evaluate: " << Function::opts.evaluate << std::endl;
+        std::string displayOption;
+        getline(std::cin, displayOption);
+        if (displayOption == "d"){
+            break;
+        } else if (displayOption == "0"){
+            Function::opts.prefix = !Function::opts.prefix;
+        } else if (displayOption == "1"){
+            Function::opts.infix = !Function::opts.infix;
+        } else if (displayOption == "2"){
+            Function::opts.simplify = !Function::opts.simplify;
+        } else if (displayOption == "3"){
+            Function::opts.evaluate = !Function::opts.evaluate;
+        } else {
+            std::cout << "Please enter d, 0, or 1\n";
+        }
+    }
+}
+
 //return true if no errors, false if any errors caught
 
 int main(int argc, const char * argv[]) {
@@ -22,30 +51,7 @@ int main(int argc, const char * argv[]) {
         if (myExpr == "q"){
             break;
         } else if (myExpr == "o"){
-            std::cout << "Enter a digit to toggle corresponding option.\n"
-                << "True indicates that that option will be used. Press d when done.\n";
-            while(true){
-                std::cout << std::boolalpha;
-                std::cout << "0: Prefix: " << Function::opts.prefix << '\n';
-                std::cout << "1: Infix: " << Function::opts.infix << std::endl;
-                std::cout << "2: Simplify: " << Function::opts.simplify << std::endl;
-                std::cout << "3: Evaluate: " << Function::opts.evaluate << std::endl;
-                std::string displayOption;
-                getline(std::cin, displayOption);
-                if (displayOption == "d"){
-                    break;
-                } else if (displayOption == "0"){
-                    Function::opts.prefix = !Function::opts.prefix;
-                } else if (displayOption == "1"){
-                    Function::opts.infix = !Function::opts.infix;
-                } else if (displayOption == "2"){
-                    Function::opts.simplify = !Function::opts.simplify;
-                } else if (displayOption == "3"){
-                    Function::opts.evaluate = !Function::opts.evaluate;
-                } else {
-                    std::cout << "Please enter d, 0, or 1\n";
-                }
-            }
+            setOptions();
             continue;
         }
         const Function* f(parse(myExpr));
