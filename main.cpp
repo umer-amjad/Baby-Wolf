@@ -108,13 +108,13 @@ void init_x() {
         double x_val_2 = ((pix_x+pixel_seperation)-x_zero)/x_scale;
         std::cout << "X val 1 is " << x_val_1 << std::endl;
         if (pix_x == 0) {
-            y_val_1 = tanh(x_val_1);
+            y_val_1 = cos(x_val_1);
         }
-        double y_val_2 = tanh(x_val_2);
+        double y_val_2 = cos(x_val_2);
         if (pix_x == 0){
-            y_coord_1 = -(y_scale*y_val_1)+y_zero;
+            y_coord_1 = round(-(y_scale*y_val_1)+y_zero);
         }
-        int y_coord_2 = -(y_scale*y_val_2)+y_zero;
+        int y_coord_2 = round(-(y_scale*y_val_2)+y_zero);
         XDrawLine(dis, win, gc, pix_x, y_coord_1, pix_x+pixel_seperation, y_coord_2);
 
         y_val_1 = y_val_2;
