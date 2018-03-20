@@ -3,8 +3,122 @@
 //  BabyWolf
 //
 //
+#include <X11/Xlib.h>
+#include <X11/Xutil.h>
+#include <X11/Xos.h>
+
 #include "Parser.hpp"
 #include "Tests.hpp"
+
+Display *dis;
+int screen;
+Window win;
+GC gc;
+
+void init_x() {
+    /* get the colors black and white (see section for details) */
+    unsigned long black,white;
+    
+    /* use the information from the environment variable DISPLAY
+     to create the X connection:
+     */
+    dis=XOpenDisplay("");
+    screen=DefaultScreen(dis);
+    black=BlackPixel(dis,screen);    /* get color black */
+    white=WhitePixel(dis, screen);  /* get color white */
+    
+    /* once the display is initialized, create the window.
+     This window will be have be 200 pixels across and 300 down.
+     It will have the foreground white and background black
+     */
+    
+    int height = 500;
+    int width = 500;
+    
+    win=XCreateSimpleWindow(dis,DefaultRootWindow(dis),0,0,
+                            width, height, 5, white, white);
+    
+    
+    /* here is where some properties of the window can be set.
+     The third and fourth items indicate the name which appears
+     at the top of the window and the name of the minimized window
+     respectively.
+     */
+    XSetStandardProperties(dis,win,"this is the graph, my dude","HI!",None,NULL,0,NULL);
+    
+    XSelectInput(dis, win, StructureNotifyMask);
+    
+    
+    XMapWindow(dis, win);
+
+    
+    /* create the Graphics Context */
+    gc=XCreateGC(dis, win, 0,0);
+    
+    /* here is another routine to set the foreground and background
+     colors _currently_ in use in the window.
+     */
+    for(;;) {
+        XEvent e;
+        XNextEvent(dis, &e);
+        if (e.type == MapNotify)
+            break;
+    }
+    
+    XSetForeground(dis,gc,black);
+    
+    double x_zero = 250;
+    double y_zero = 250;
+    double x_scale = 50;
+    double y_scale = 50;
+    
+    //draw x axis:
+    XDrawLine(dis, win, gc, 0, y_zero, width-1, y_zero);
+    
+    //notches:
+    for(int i = 0; i < width-1; i++){
+        if (((int)x_zero - i) % (int)x_scale == 0){
+            XDrawLine(dis, win, gc, i, y_zero, i, y_zero+5);
+        } else if ((((int)x_zero - i) % ((int)x_scale/10)) == 0){
+            XDrawLine(dis, win, gc, i, y_zero, i, y_zero+2);
+        }
+    }
+    
+    //draw y axis:
+    
+    XDrawLine(dis, win, gc, x_zero, 0, x_zero, height-1);
+    //notches:
+    for(int i = 0; i < height-1; i++){
+        if (((int)y_zero - i) % (int)y_scale == 0){
+            XDrawLine(dis, win, gc, x_zero-5, i, x_zero, i);
+        } else if ((((int)y_zero - i) % ((int)y_scale/10)) == 0){
+            XDrawLine(dis, win, gc, x_zero-2, i, x_zero, i);
+        }
+    }
+    
+    XSetForeground(dis,gc,45568);
+
+    //draw graph
+
+    for (int pix_x = 0; pix_x < width-1; pix_x++){
+        double x_val_1 = (pix_x-x_zero)/x_scale;
+        double x_val_2 = ((pix_x+1)-x_zero)/x_scale;
+        std::cout << "X val 1 is " << x_val_1 << std::endl;
+        double y_val_1 = tanh(x_val_1);
+        double y_val_2 = tanh(x_val_2);
+        double y_coord_1 = -(y_scale*y_val_1)+y_zero;
+        double y_coord_2 = -(y_scale*y_val_2)+y_zero;
+        
+        
+        XDrawLine(dis, win, gc, pix_x, (int)y_coord_1, pix_x+1, (int)y_coord_2);
+
+                          
+    }
+
+
+    XFlush(dis);
+};
+
 
 //see notes in Parser.hpp and Function.hpp
 
@@ -40,6 +154,7 @@ void setOptions(){
 //return true if no errors, false if any errors caught
 
 int main(int argc, const char * argv[]) {
+    init_x();
     if (testAll()){
         std::cout << "All tests passed!" << std::endl;
     }
