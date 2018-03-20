@@ -96,23 +96,26 @@ void init_x() {
         }
     }
     
-    XSetForeground(dis,gc,45568);
+    XSetForeground(dis,gc,45568);//green
 
     //draw graph
-
+    double y_val_1 = 0, y_coord_1 = 0;
     for (int pix_x = 0; pix_x < width-1; pix_x++){
         double x_val_1 = (pix_x-x_zero)/x_scale;
         double x_val_2 = ((pix_x+1)-x_zero)/x_scale;
         std::cout << "X val 1 is " << x_val_1 << std::endl;
-        double y_val_1 = tanh(x_val_1);
+        if (pix_x == 0) {
+            y_val_1 = tanh(x_val_1);
+        }
         double y_val_2 = tanh(x_val_2);
-        double y_coord_1 = -(y_scale*y_val_1)+y_zero;
+        if (pix_x == 0){
+            y_coord_1 = -(y_scale*y_val_1)+y_zero;
+        }
         double y_coord_2 = -(y_scale*y_val_2)+y_zero;
-        
-        
         XDrawLine(dis, win, gc, pix_x, (int)y_coord_1, pix_x+1, (int)y_coord_2);
+        y_val_1 = y_val_2;
+        y_coord_1 = y_coord_2;
 
-                          
     }
 
 
