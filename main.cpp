@@ -32,8 +32,13 @@ void init_x() {
      It will have the foreground white and background black
      */
     
-    int height = 500;
-    int width = 500;
+    int height = 800;
+    int width = 1000;
+    
+    double x_zero = 500;
+    double y_zero = 400;
+    double x_scale = 100;
+    double y_scale = 390;
     
     win=XCreateSimpleWindow(dis,DefaultRootWindow(dis),0,0,
                             width, height, 5, white, white);
@@ -67,11 +72,6 @@ void init_x() {
     
     XSetForeground(dis,gc,black);
     
-    double x_zero = 250;
-    double y_zero = 250;
-    double x_scale = 50;
-    double y_scale = 50;
-    
     //draw x axis:
     XDrawLine(dis, win, gc, 0, y_zero, width-1, y_zero);
     
@@ -99,28 +99,21 @@ void init_x() {
     XSetForeground(dis,gc,45568);//green
 
     //draw graph
-    double y_val_1 = 0;
-    int y_coord_1 = 0;
     
-    int pixel_seperation = 1; //1 pixel per calculation
-    for (int pix_x = 0; pix_x < width-1; pix_x+=pixel_seperation){
-        double x_val_1 = (pix_x-x_zero)/x_scale;
-        double x_val_2 = ((pix_x+pixel_seperation)-x_zero)/x_scale;
-        std::cout << "X val 1 is " << x_val_1 << std::endl;
-        if (pix_x == 0) {
-            y_val_1 = cos(x_val_1);
-        }
-        double y_val_2 = cos(x_val_2);
-        if (pix_x == 0){
-            y_coord_1 = round(-(y_scale*y_val_1)+y_zero);
-        }
-        int y_coord_2 = round(-(y_scale*y_val_2)+y_zero);
-        XDrawLine(dis, win, gc, pix_x, y_coord_1, pix_x+pixel_seperation, y_coord_2);
-
-        y_val_1 = y_val_2;
-        y_coord_1 = y_coord_2;
-
+    int pixel_separation = 1; //1 pixel per calculation
+    int i = 0;
+    std::vector<XPoint> points; //vector of points to draw lines between
+    //you need to go out of bounds:
+    for (int x_coord = 0; x_coord < width + pixel_separation; x_coord+=pixel_separation){
+        double x_val = (x_coord-x_zero)/x_scale;
+        std::cout << "X val is " << x_val << std::endl;
+        double y_val = cos(x_val);
+        int y_coord = round(-(y_scale*y_val)+y_zero);
+        points.push_back({(short)x_coord, (short)y_coord});
+        i++;
     }
+    XDrawLines(dis, win, gc, points.data(), i, CoordModeOrigin);
+    std::cout << "Num points " << i << std::endl;
 
 
     XFlush(dis);
