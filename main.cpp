@@ -10,12 +10,11 @@
 #include "Parser.hpp"
 #include "Tests.hpp"
 
-Display *dis;
-int screen;
-Window win;
-GC gc;
-
-void init_x() {
+void init_x(const Function* f) {
+    Display *dis;
+    int screen;
+    Window win;
+    GC gc;
     /* get the colors black and white (see section for details) */
     unsigned long black,white;
     
@@ -37,8 +36,8 @@ void init_x() {
     
     double x_zero = 500;
     double y_zero = 400;
-    double x_scale = 100;
-    double y_scale = 390;
+    double x_scale = 50;
+    double y_scale = 50;
     
     win=XCreateSimpleWindow(dis,DefaultRootWindow(dis),0,0,
                             width, height, 5, white, white);
@@ -79,6 +78,10 @@ void init_x() {
     for(int i = 0; i < width-1; i++){
         if (((int)x_zero - i) % (int)x_scale == 0){
             XDrawLine(dis, win, gc, i, y_zero, i, y_zero+5);
+            int x_val = (i-x_zero)/x_scale;
+            char str[30];
+            int len = sprintf(str,"%d",x_val);
+            //XDrawString(dis, win, gc, i, y_zero+20, str, len);
         } else if ((((int)x_zero - i) % ((int)x_scale/10)) == 0){
             XDrawLine(dis, win, gc, i, y_zero, i, y_zero+2);
         }
@@ -106,14 +109,15 @@ void init_x() {
     //you need to go out of bounds:
     for (int x_coord = 0; x_coord < width + pixel_separation; x_coord+=pixel_separation){
         double x_val = (x_coord-x_zero)/x_scale;
-        std::cout << "X val is " << x_val << std::endl;
-        double y_val = cos(x_val);
+        //std::cout << "X val is " << x_val << std::endl;
+        double y_val = f->eval(x_val);
+        //std::cout << "Y val is " << y_val << std::endl;
         int y_coord = round(-(y_scale*y_val)+y_zero);
         points.push_back({(short)x_coord, (short)y_coord});
         i++;
     }
     XDrawLines(dis, win, gc, points.data(), i, CoordModeOrigin);
-    std::cout << "Num points " << i << std::endl;
+    //std::cout << "Num points " << i << std::endl;
 
 
     XFlush(dis);
@@ -154,7 +158,6 @@ void setOptions(){
 //return true if no errors, false if any errors caught
 
 int main(int argc, const char * argv[]) {
-    init_x();
     if (testAll()){
         std::cout << "All tests passed!" << std::endl;
     }
@@ -174,6 +177,7 @@ int main(int argc, const char * argv[]) {
             continue;
         std::cout << "Function is: " << '\n';
         std::cout << *f;
+        init_x(f);
         if (Function::opts.simplify){
             const Function* simpleF(f->simplify());
             std::cout << "Simplified function is: " << '\n';
