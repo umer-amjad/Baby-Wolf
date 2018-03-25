@@ -118,11 +118,18 @@ void init_x(const Function* f) {
     }
     XDrawLines(dis, win, gc, points.data(), i, CoordModeOrigin);
     //std::cout << "Num points " << i << std::endl;
-
-
+    
     XFlush(dis);
 };
 
+
+void CloseWindow(Display* dis, Window win, GC gc){
+    
+    
+    XFreeGC(dis, gc);
+    XDestroyWindow(dis,win);
+    XCloseDisplay(dis);
+}
 
 //see notes in Parser.hpp and Function.hpp
 
