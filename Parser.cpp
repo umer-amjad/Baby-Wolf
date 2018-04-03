@@ -9,7 +9,7 @@
 #include "Parser.hpp"
 
 const std::vector<char> ops{'+', '-', '*', '/', '^'};
-const std::vector<std::string> trigFns{"asinh", "acosh", "atanh", "asech", "acsch", "acoth","asin", "acos", "atan", "asec", "acsc", "acot", "sinh", "cosh", "tanh", "sech", "csch", "coth", "sin", "cos", "tan", "sec", "csc", "cot"};
+const std::vector<std::string> unaryFns{"asinh", "acosh", "atanh", "asech", "acsch", "acoth","asin", "acos", "atan", "asec", "acsc", "acot", "sinh", "cosh", "tanh", "sech", "csch", "coth", "sin", "cos", "tan", "sec", "csc", "cot", "log", "ln"};
 
 const Function* parse(std::string expr){
     //remove spaces:
@@ -146,7 +146,7 @@ Function* parseToken(std::string expr){
     }
     
     //trig functions, check longer ones before shorter ones
-    for (auto trigFn : trigFns){
+    for (auto trigFn : unaryFns){
         int trigFnLength = (int) trigFn.length();
         if (length >= trigFnLength && expr.substr(0, trigFnLength) == trigFn){
             return new Unary(trigFn, parseToken(expr.substr(trigFnLength)));

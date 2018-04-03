@@ -117,9 +117,31 @@ void init_x(const Function* f) {
         i++;
     }
     XDrawLines(dis, win, gc, points.data(), i, CoordModeOrigin);
+
     //std::cout << "Num points " << i << std::endl;
     
     XFlush(dis);
+    
+//    //testing animation....
+//    int test = 0;
+//    while (true){
+//        if (test == width){
+//            test = 0;
+//        }
+//        XSetForeground(dis,gc,black);
+//        for (int i = 0; i < 30; i++){
+//            XDrawPoint(dis, win, gc, test+i, 7);
+//            XDrawPoint(dis, win, gc, test+i, 8);
+//        }
+//        XSetForeground(dis,gc,white);
+//        for (int i = 0; i < 30; i++){
+//            XDrawPoint(dis, win, gc, test-i, 7);
+//            XDrawPoint(dis, win, gc, test-i, 8);
+//        }
+//        usleep(3000);
+//        XFlush(dis);
+//        ++test;
+//    }
 };
 
 

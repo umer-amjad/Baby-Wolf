@@ -31,6 +31,10 @@ double Unary::eval(double arg) const{
         return -1 * result;
     } else if (op == "inv"){
         return 1 / result;
+    } else if (op == "ln"){
+        return log(result); //natural logarithm
+    } else if (op == "log"){
+        return log(result)/log(opts.base); //log base b
     } else if (op == "sin"){
         return sin(result);
     } else if (op == "cos"){

@@ -24,6 +24,7 @@ struct Options {
     bool infix;
     bool simplify;
     bool evaluate;
+    double base = M_E;
 };
 
 class Function {
