@@ -195,12 +195,12 @@ void setOptions(){
                     }
                     Function::opts.base =  newBase;
                 }
-            } catch(const std::exception& e) {
+            } catch (const std::exception& e){
                 std::cout << "Log base entered must be a positive real number not equal to one, or you can enter \"e\". The base's value remains " << Function::opts.base << std::endl;
             }
             Function::opts.evaluate = !Function::opts.evaluate;
         } else {
-            std::cout << "Please enter d, 0, or 1\n";
+            std::cout << "Please enter d, or an integer between 0 and 4 inclusive\n";
         }
     }
 }
