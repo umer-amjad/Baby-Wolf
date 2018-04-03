@@ -10,7 +10,7 @@ Function* Argument::copy() const {
     return new Argument;
 }
 
-double Argument::eval(double arg) const {
+double Argument::evaluate(double arg) const {
     return arg;
 }
 

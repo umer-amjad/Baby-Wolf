@@ -23,7 +23,7 @@ struct Options {
     bool prefix;
     bool infix;
     bool simplify;
-    bool evaluate;
+    bool evaluateuate;
     double base = M_E;
 };
 
@@ -67,8 +67,8 @@ public:
     //functions defined by the user already
     static std::map<std::string, const Function*> userFunctions;
     
-    //evaluate function given argument
-    virtual double eval(double arg) const = 0;
+    //evaluateuate function given argument
+    virtual double evaluate(double arg) const = 0;
     
     //return this function but subtitute x with fn
     virtual Function* substitute(const Function* subFn) const = 0;

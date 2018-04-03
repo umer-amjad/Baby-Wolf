@@ -23,8 +23,8 @@ Function* Unary::copy() const {
     return new Unary(*this);
 }
 
-double Unary::eval(double arg) const{
-    double result = fn->eval(arg);
+double Unary::evaluate(double arg) const{
+    double result = fn->evaluate(arg);
     if (op == "abs"){
         return (result > 0) ? result : (-1 * result);
     } else if (op == "neg"){
@@ -115,7 +115,7 @@ const Function* Unary::collapse() const {
     const Function* simpleFn = fn->collapse();
     
     if (simpleFn->getType() == FunctionType::CONSTANT){
-        return new Constant(this->eval(0)); //value of argument doesn't matter
+        return new Constant(this->evaluate(0)); //value of argument doesn't matter
     }
     
     return new Unary(op, simpleFn);

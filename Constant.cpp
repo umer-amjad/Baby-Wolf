@@ -22,7 +22,7 @@ Function* Constant::copy() const {
 }
 
 
-double Constant::eval(double arg) const {
+double Constant::evaluate(double arg) const {
     return val;
 }
 

@@ -30,7 +30,7 @@ public:
     
     Variadic& operator=(Variadic v);
     
-    virtual double eval(double arg) const;
+    virtual double evaluate(double arg) const;
     virtual Function* substitute(const Function* subFn) const;
     virtual FunctionType getType() const;
     virtual char getOp() const;

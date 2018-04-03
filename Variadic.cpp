@@ -24,27 +24,27 @@ Function* Variadic::copy() const {
     return new Variadic(*this);
 }
 
-double Variadic::eval(double arg) const{
-    double result = fns[0]->eval(arg); //start with first
+double Variadic::evaluate(double arg) const{
+    double result = fns[0]->evaluate(arg); //start with first
     int reverser = (int) (fns.size() - 3); //allows to reverse iterator
     if (op == '^')
-        result = fns[fns.size() - 1]->eval(arg);
+        result = fns[fns.size() - 1]->evaluate(arg);
     for (auto f = fns.begin() + 1; f !=fns.end() ; f++){ // loop from second onwards
         switch (op) {
             case '+':
-                result += (*f)->eval(arg);
+                result += (*f)->evaluate(arg);
                 break;
             case '-':
-                result -= (*f)->eval(arg);
+                result -= (*f)->evaluate(arg);
                 break;
             case '*':
-                result *= (*f)->eval(arg);
+                result *= (*f)->evaluate(arg);
                 break;
             case '/':
-                result /= (*f)->eval(arg);
+                result /= (*f)->evaluate(arg);
                 break;
             case '^':
-                result = pow((*(f + reverser))->eval(arg), result);
+                result = pow((*(f + reverser))->evaluate(arg), result);
                 reverser -= 2;
                 break;
             default:
@@ -130,7 +130,7 @@ const Function* Variadic::collapse() const {
     }
     if (fn != collapseFns.end()){
         std::vector<const Function*> constFns(fn, collapseFns.end());
-        double result = (new Variadic(op, constFns))->eval(0); //argument to eval doesn't matter
+        double result = (new Variadic(op, constFns))->evaluate(0); //argument to evaluate doesn't matter
         if ((op == '+' && result != 0) || (op == '*' && result != 1)){
             simpleFns.emplace_back(new Constant(result));
         }
