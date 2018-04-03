@@ -158,14 +158,17 @@ void CloseWindow(Display* dis, Window win, GC gc){
 //set options:
 
 void setOptions(){
-    std::cout << "Enter a digit to toggle corresponding option.\n"
-    << "True indicates that that option will be used. Press d when done.\n";
+    std::cout << "Enter a digit to change corresponding option.\n";
+    std::cout << "Press d when done.\n";
     while(true){
         std::cout << std::boolalpha;
         std::cout << "0: Prefix: " << Function::opts.prefix << '\n';
         std::cout << "1: Infix: " << Function::opts.infix << std::endl;
         std::cout << "2: Simplify: " << Function::opts.simplify << std::endl;
         std::cout << "3: Evaluate: " << Function::opts.evaluate << std::endl;
+        std::cout << "4: Log base: " ;
+        (Function::opts.base == M_E) ? (std::cout << "e") : (std::cout << Function::opts.base);
+        std::cout << std::endl;
         std::string displayOption;
         getline(std::cin, displayOption);
         if (displayOption == "d"){
@@ -177,6 +180,24 @@ void setOptions(){
         } else if (displayOption == "2"){
             Function::opts.simplify = !Function::opts.simplify;
         } else if (displayOption == "3"){
+            Function::opts.evaluate = !Function::opts.evaluate;
+        } else if (displayOption == "4"){
+            std::cout << "Enter the base to change to." << std::endl;
+            std::string newLogBase;
+            getline(std::cin, newLogBase);
+            try {
+                if (newLogBase == "e"){
+                    Function::opts.base = M_E;
+                } else {
+                    double newBase = std::stod(newLogBase);
+                    if (newBase == 1 || newBase < 0){
+                        throw std::invalid_argument("");
+                    }
+                    Function::opts.base =  newBase;
+                }
+            } catch(const std::exception& e) {
+                std::cout << "Log base entered must be a positive real number not equal to one, or you can enter \"e\". The base's value remains " << Function::opts.base << std::endl;
+            }
             Function::opts.evaluate = !Function::opts.evaluate;
         } else {
             std::cout << "Please enter d, 0, or 1\n";
