@@ -77,6 +77,7 @@ Function* Variadic::derivative() const {
         } else if (op == '+'){
             derivedFns.emplace_back(fn->derivative());
         }
+        ++i;
     }
     return new Variadic('+', derivedFns);
 }
