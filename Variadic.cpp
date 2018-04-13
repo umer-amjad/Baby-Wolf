@@ -62,6 +62,25 @@ Function* Variadic::substitute(const Function* subFn) const {
     return new Variadic(op, substitutedFns);
 }
 
+Function* Variadic::derivative() const {
+    //implemented for + and *
+    //still need to implement for ^ operator
+    std::vector<const Function*> derivedFns;
+    int i = 0;
+    for (auto& fn : fns){
+        Function* derivedInner = fn->derivative();
+        if (op == '*'){
+            std::vector<const Function*> restProduct = fns;
+            restProduct.erase(restProduct.begin() + i);
+            restProduct.emplace_back(derivedInner);
+            derivedFns.emplace_back(new Variadic('*', restProduct));
+        } else if (op == '+'){
+            derivedFns.emplace_back(fn->derivative());
+        }
+    }
+    return new Variadic('+', derivedFns);
+}
+
 const Function* Variadic::wrap() const {
     //std::cout << "Before wrapping: " << *this << " end\n"; DEBUG
     char wrapOp = op;

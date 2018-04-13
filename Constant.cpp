@@ -30,6 +30,10 @@ Function* Constant::substitute(const Function* subFn) const {
     return new Constant(*this);
 }
 
+Function* Constant::derivative() const {
+    return new Constant(0);
+}
+
 std::string Constant::getPrefixString() const {
     std::stringstream stream;
     if (val == M_PI){

@@ -73,6 +73,9 @@ public:
     //return this function but subtitute x with fn
     virtual Function* substitute(const Function* subFn) const = 0;
     
+    //returns derivative of function
+    virtual Function* derivative() const = 0;
+    
     //returns arithmetically simplified function - NOTE: returns new-ly allocated function
     const Function* simplify() const;
     

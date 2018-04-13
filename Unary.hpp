@@ -29,6 +29,7 @@ public:
 
     virtual double evaluate(double arg) const;
     virtual Function* substitute(const Function* subFn) const;
+    virtual Function* derivative() const;
     virtual FunctionType getType() const;
     virtual char getOp() const;
     virtual std::pair<const Function*, std::vector<const Function*>> getFns() const;

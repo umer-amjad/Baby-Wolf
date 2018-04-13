@@ -23,6 +23,7 @@ public:
 
     virtual double evaluate(double arg) const;
     virtual Function* substitute(const Function* subFn) const;
+    virtual Function* derivative() const;
     virtual std::string getPrefixString() const;
     virtual std::string getInfixString() const;
     virtual FunctionType getType() const;

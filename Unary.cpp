@@ -91,6 +91,11 @@ Function* Unary::substitute(const Function* subFn) const {
     return new Unary(op, fn->substitute(subFn));
 }
 
+Function* Unary::derivative() const {
+    //still need to implement for all supported unary functions
+    return fn->derivative();
+}
+
 const Function* Unary::wrap() const {
     const Function* wrapFn = fn->wrap();
     return new Unary(op, wrapFn);
