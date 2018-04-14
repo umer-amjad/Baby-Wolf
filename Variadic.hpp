@@ -14,7 +14,7 @@
 #include "Constant.hpp"
 
 class Variadic: public Function{
-    char op;
+    OperationType op;
     std::vector<const Function*> fns;
 
     virtual Function* copy() const;
@@ -25,7 +25,8 @@ class Variadic: public Function{
     virtual std::string getInfixString() const;
     
 public:
-    Variadic(char o, std::vector<const Function*> fns);
+    Variadic(std::string o, std::vector<const Function*> fns);
+    Variadic(OperationType o, std::vector<const Function*> fns);
     Variadic(const Variadic& v);
     
     Variadic& operator=(Variadic v);
@@ -34,7 +35,7 @@ public:
     virtual Function* substitute(const Function* subFn) const;
     virtual Function* derivative() const;
     virtual FunctionType getType() const;
-    virtual char getOp() const;
+    virtual OperationType getOperation() const;
     virtual std::pair<const Function*, std::vector<const Function*>> getFns() const;
     ~Variadic();
 };

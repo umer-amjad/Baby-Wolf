@@ -26,7 +26,8 @@ enum OperationType {
     SIN, COS, TAN, SEC, CSC, COT, //6
     ASIN, ACOS, ATAN, ASEC, ACSC, ACOT, //6
     SINH, COSH, TANH, SECH, CSCH, COTH, //6
-    ASINH, ACOSH, ATANH, ASECH, ACSCH, ACOTH //6, 34 in total
+    ASINH, ACOSH, ATANH, ASECH, ACSCH, ACOTH, //6,
+    INVALID = -1 //1 - 35 in total
 };
 
 
@@ -64,7 +65,7 @@ class Function {
     virtual FunctionType getType() const = 0;
     
     //get operation (for variadic and unary types only), default empty:
-    virtual char getOp() const;
+    virtual OperationType getOperation() const;
     
     //get functions (for variadic and unary types only), default <nullptr, empty vector>:
     virtual std::pair<const Function*, std::vector<const Function*>> getFns() const;

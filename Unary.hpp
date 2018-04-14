@@ -11,7 +11,7 @@
 #include "Constant.hpp"
 
 class Unary: public Function{
-    std::string op;
+    OperationType op;
     const Function* fn;
 
     virtual Function* copy() const;
@@ -23,6 +23,7 @@ class Unary: public Function{
     
 public:
     Unary(std::string o, const Function* fn);
+    Unary(OperationType o, const Function* fn);
     Unary(const Unary& u);
     
     Unary& operator=(Unary u);
@@ -31,7 +32,7 @@ public:
     virtual Function* substitute(const Function* subFn) const;
     virtual Function* derivative() const;
     virtual FunctionType getType() const;
-    virtual char getOp() const;
+    virtual OperationType getOperation() const;
     virtual std::pair<const Function*, std::vector<const Function*>> getFns() const;
     ~Unary();
 };

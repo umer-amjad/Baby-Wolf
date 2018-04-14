@@ -6,7 +6,11 @@
 
 #include "Unary.hpp"
 
-Unary::Unary(std::string o, const Function* fn): op(o), fn(fn){}
+Unary::Unary(std::string o, const Function* fn): fn(fn){
+    op = stringToOperationType[o];
+}
+
+Unary::Unary(OperationType o, const Function* fn): op(o), fn(fn){}
 
 Unary::Unary(const Unary& u){
     this->op = u.op;
@@ -25,66 +29,71 @@ Function* Unary::copy() const {
 
 double Unary::evaluate(double arg) const{
     double result = fn->evaluate(arg);
-    if (op == "abs"){
-        return (result > 0) ? result : (-1 * result);
-    } else if (op == "neg"){
-        return -1 * result;
-    } else if (op == "inv"){
-        return 1 / result;
-    } else if (op == "ln"){
-        return log(result); //natural logarithm
-    } else if (op == "log"){
-        return log(result)/log(opts.base); //log base b
-    } else if (op == "sin"){
-        return sin(result);
-    } else if (op == "cos"){
-        return cos(result);
-    } else if (op == "tan"){
-        return tan(result);
-    } else if (op == "sec"){
-        return 1 / cos(result);
-    } else if (op == "csc"){
-        return 1 / sin(result);
-    } else if (op == "cot"){
-        return 1 / tan(result);
-    } else if (op == "asin"){
-        return asin(result);
-    } else if (op == "acos"){
-        return acos(result);
-    } else if (op == "atan"){
-        return atan(result);
-    } else if (op == "asec"){
-        return acos(1/result);
-    } else if (op == "acsc"){
-        return asin(1/result);
-    } else if (op == "acot"){
-        return atan(1/result);
-    } else if (op == "sinh"){
-        return sinh(result);
-    } else if (op == "cosh"){
-        return cosh(result);
-    } else if (op == "tanh"){
-        return tanh(result);
-    } else if (op == "sech"){
-        return 1 / cosh(result);
-    } else if (op == "csch"){
-        return 1 / sinh(result);
-    } else if (op == "coth"){
-        return 1 / tanh(result);
-    } else if (op == "asinh"){
-        return asinh(result);
-    } else if (op == "acosh"){
-        return acosh(result);
-    } else if (op == "atanh"){
-        return atanh(result);
-    } else if (op == "asech"){
-        return acosh(1/result);
-    } else if (op == "acsch"){
-        return asinh(1/result);
-    } else if (op == "acoth"){
-        return atanh(1/result);
+    switch (op){
+        case NEG:
+            return -1 * result;
+        case INV:
+            return 1 / result;
+        case ABS:
+            return (result > 0) ? result : (-1 * result);
+        case LN:
+            return log(result); //natural logarithm
+        case LOG:
+            return log(result)/log(opts.base); //log base b
+        case SIN:
+            return sin(result);
+        case COS:
+            return cos(result);
+        case TAN:
+            return tan(result);
+        case SEC:
+            return 1 / cos(result);
+        case CSC:
+            return 1 / sin(result);
+        case COT:
+            return 1 / tan(result);
+        case ASIN:
+            return asin(result);
+        case ACOS:
+            return acos(result);
+        case ATAN:
+            return atan(result);
+        case ASEC:
+            return acos(1/result);
+        case ACSC:
+            return asin(1/result);
+        case ACOT:
+            return atan(1/result);
+        case SINH:
+            return sinh(result);
+        case COSH:
+            return cosh(result);
+        case TANH:
+            return tanh(result);
+        case SECH:
+            return 1 / cosh(result);
+        case CSCH:
+            return 1 / sinh(result);
+        case COTH:
+            return 1 / tanh(result);
+        case ASINH:
+            return asinh(result);
+        case ACOSH:
+            return acosh(result);
+        case ATANH:
+            return atanh(result);
+        case ASECH:
+            return acosh(1/result);
+        case ACSCH:
+            return asinh(1/result);
+        case ACOTH:
+            return atanh(1/result);
+        case INVALID:
+            return 0;
+        default:
+            return 0;
     }
-    return 0;
+    
 }
 
 Function* Unary::substitute(const Function* subFn) const {
@@ -104,11 +113,11 @@ const Function* Unary::wrap() const {
 const Function* Unary::flatten() const {
     const Function* flatFn = fn->flatten();
     //std::cout << "Before flattening " << *flatFn << std::endl; //debug
-    if (flatFn->getType() == FunctionType::UNARY && flatFn->getOp() == op[0]){
-        if (op == "abs"){
+    if (flatFn->getType() == FunctionType::UNARY && flatFn->getOperation() == op){
+        if (op == ABS){
             return flatFn;
         } //else is negative of negative, or reciprocal of reciprocal
-        else if (op == "neg" || op == "inv"){
+        else if (op == NEG || op == INV){
             return flatFn->getFns().first;
         }
     }
@@ -130,7 +139,7 @@ const Function* Unary::collapse() const {
 std::string Unary::getPrefixString() const {
     std::string str = "";
     str += "(";
-    str += op;
+    str += operationToString[op];
     str += " ";
     str += fn->getPrefixString();
     str += ")";
@@ -139,19 +148,19 @@ std::string Unary::getPrefixString() const {
 
 std::string Unary::getInfixString() const {
     std::string str = "";
-    if (op == "neg"){
+    if (op == NEG){
         str += "(- ";
-    } else if (op == "inv"){
+    } else if (op == INV){
         str += "(1 / ";
-    } else if (op == "abs"){
+    } else if (op == ABS){
         str += "|";
     } else {
         str += "(";
-        str += op;
+        str += operationToString[op];
         str += " ";
     }
     str += fn->getInfixString();
-    if (op == "abs"){
+    if (op == ABS){
         str+= "|";
     } else {
         str+= ")";
@@ -159,9 +168,13 @@ std::string Unary::getInfixString() const {
     return str;
 }
 
-FunctionType Unary::getType() const { return FunctionType::UNARY;}
+FunctionType Unary::getType() const {
+    return FunctionType::UNARY;
+}
 
-char Unary::getOp() const {return op[0];}
+OperationType Unary::getOperation() const {
+    return op;
+}
 
 std::pair<const Function*, std::vector<const Function*>> Unary::getFns() const { return {fn, std::vector<const Function*>()};}
 

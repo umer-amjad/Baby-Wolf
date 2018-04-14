@@ -140,12 +140,12 @@ Function* parseToken(std::string expr){
     
     // negatives
     if (expr[0] == '-'){
-        return new Unary("neg", parseToken(expr.substr(1)));
+        return new Unary(NEG, parseToken(expr.substr(1)));
     }
     
     //absolute value
     if (expr[0] == '<'){
-        return new Unary("abs", parseToken(expr.substr(1, length - 2)));
+        return new Unary(ABS, parseToken(expr.substr(1, length - 2)));
     }
     
     //trig functions, check longer ones before shorter ones
@@ -187,6 +187,8 @@ Function* tokenize(std::string expr, char op){
     int abs = 0;
     int substringStart = 0;
     int substringLength = 0;
+    std::string operationString;
+    operationString += op;
     std::vector<const Function*> fns;
     for (int i = 0; i < length; i++){
         ++substringLength;
@@ -208,7 +210,7 @@ Function* tokenize(std::string expr, char op){
     }
     if (substringStart > 0){
         fns.emplace_back(parseToken(expr.substr(substringStart)));
-        f = new Variadic(op, fns);
+        f = new Variadic(operationString, fns);
     }
     return f;
 }

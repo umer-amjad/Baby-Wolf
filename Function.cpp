@@ -25,11 +25,11 @@ std::string OperationTypeToString(OperationType o){
         case POWER:
             return "^";
         case NEG:
-            return "-";
+            return "neg";
         case INV:
-            return "1 / ";
+            return "inv";
         case ABS:
-            return "|";
+            return "abs";
         case LN:
             return "ln";
         case LOG:
@@ -82,6 +82,8 @@ std::string OperationTypeToString(OperationType o){
             return "acsch";
         case ACOTH:
             return "acoth";
+        case INVALID:
+            return "";
     }
 }
 
@@ -101,8 +103,8 @@ const Function* Function::flatten() const {
     return this;
 }
 
-char Function::getOp() const {
-    return ' ';
+OperationType Function::getOperation() const {
+    return INVALID;
 }
 
 const Function* Function::simplify() const {
