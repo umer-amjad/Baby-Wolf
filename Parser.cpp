@@ -12,6 +12,9 @@ const std::vector<char> ops{'+', '-', '*', '/', '^'};
 const std::vector<std::string> unaryFns{"asinh", "acosh", "atanh", "asech", "acsch", "acoth","asin", "acos", "atan", "asec", "acsc", "acot", "sinh", "cosh", "tanh", "sech", "csch", "coth", "sin", "cos", "tan", "sec", "csc", "cot", "log", "ln"};
 
 const Function* parse(std::string expr){
+    //initialize operation maps:
+    Function::initalizeOperationTypeMaps();
+    
     //remove spaces:
     bool hasName = false;
     std::string functionName;

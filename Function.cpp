@@ -9,6 +9,90 @@
 Options Function::opts{true, false, false, true};
 std::map<std::string, const Function*> Function::userFunctions{};
 
+std::map<OperationType, std::string> Function::operationToString;
+std::map<std::string, OperationType> Function::stringToOperationType;
+
+std::string OperationTypeToString(OperationType o){
+    switch(o){
+        case PLUS:
+            return "+";
+        case MINUS:
+            return "-";
+        case TIMES:
+            return "*";
+        case DIVIDE:
+            return "/";
+        case POWER:
+            return "^";
+        case NEG:
+            return "-";
+        case INV:
+            return "1 / ";
+        case ABS:
+            return "|";
+        case LN:
+            return "ln";
+        case LOG:
+            return "log";
+        case SIN:
+            return "sin";
+        case COS:
+            return "cos";
+        case TAN:
+            return "tan";
+        case SEC:
+            return "sec";
+        case CSC:
+            return "csc";
+        case COT:
+            return "cot";
+        case ASIN:
+            return "asin";
+        case ACOS:
+            return "acos";
+        case ATAN:
+            return "atan";
+        case ASEC:
+            return "asec";
+        case ACSC:
+            return "acsc";
+        case ACOT:
+            return "acot";
+        case SINH:
+            return "sinh";
+        case COSH:
+            return "cosh";
+        case TANH:
+            return "tanh";
+        case SECH:
+            return "sech";
+        case CSCH:
+            return "csch";
+        case COTH:
+            return "coth";
+        case ASINH:
+            return "asinh";
+        case ACOSH:
+            return "acosh";
+        case ATANH:
+            return "atanh";
+        case ASECH:
+            return "asech";
+        case ACSCH:
+            return "acsch";
+        case ACOTH:
+            return "acoth";
+    }
+}
+
+void Function::initalizeOperationTypeMaps(){
+    for (OperationType type = PLUS; type < ACOTH; type = (OperationType)(type + 1)){
+        std::string typeString = OperationTypeToString(type);
+        operationToString[type] = typeString;
+        stringToOperationType[typeString] = type;
+    }
+}
+
 const Function* Function::wrap() const {
     return this;
 }

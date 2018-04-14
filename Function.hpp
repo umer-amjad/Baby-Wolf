@@ -19,6 +19,17 @@
 
 enum FunctionType {VARIADIC, UNARY, ARGUMENT, CONSTANT};
 
+enum OperationType {
+    PLUS = 0, MINUS, TIMES, DIVIDE, POWER, //5
+    NEG, INV, ABS, //3
+    LN, LOG, //2
+    SIN, COS, TAN, SEC, CSC, COT, //6
+    ASIN, ACOS, ATAN, ASEC, ACSC, ACOT, //6
+    SINH, COSH, TANH, SECH, CSCH, COTH, //6
+    ASINH, ACOSH, ATANH, ASECH, ACSCH, ACOTH //6, 34 in total
+};
+
+
 struct Options {
     bool prefix;
     bool infix;
@@ -66,6 +77,13 @@ public:
     
     //functions defined by the user already
     static std::map<std::string, const Function*> userFunctions;
+    
+    //maps to and from internal operation to string
+    static std::map<OperationType, std::string> operationToString;
+    static std::map<std::string, OperationType> stringToOperationType;
+    
+    //initialization of maps
+    static void initalizeOperationTypeMaps();
     
     //evaluateuate function given argument
     virtual double evaluate(double arg) const = 0;
