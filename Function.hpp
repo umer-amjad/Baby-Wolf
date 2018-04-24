@@ -32,7 +32,7 @@ struct Options {
     bool prefix;
     bool infix;
     bool simplify;
-    bool evaluateuate;
+    bool evaluate;
     double base = M_E;
 };
 
@@ -83,7 +83,7 @@ public:
     //initialization of maps
     static void initalizeOperationTypeMaps();
     
-    //evaluateuate function given argument
+    //evaluate function given argument
     virtual double evaluate(double arg) const = 0;
     
     //return this function but subtitute x with fn

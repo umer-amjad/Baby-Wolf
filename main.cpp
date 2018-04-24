@@ -165,7 +165,7 @@ void setOptions(){
         std::cout << "0: Prefix: " << Function::opts.prefix << '\n';
         std::cout << "1: Infix: " << Function::opts.infix << std::endl;
         std::cout << "2: Simplify: " << Function::opts.simplify << std::endl;
-        std::cout << "3: Evaluate: " << Function::opts.evaluateuate << std::endl;
+        std::cout << "3: Evaluate: " << Function::opts.evaluate << std::endl;
         std::cout << "4: Log base: " ;
         (Function::opts.base == M_E) ? (std::cout << "e") : (std::cout << Function::opts.base);
         std::cout << std::endl;
@@ -180,7 +180,7 @@ void setOptions(){
         } else if (displayOption == "2"){
             Function::opts.simplify = !Function::opts.simplify;
         } else if (displayOption == "3"){
-            Function::opts.evaluateuate = !Function::opts.evaluateuate;
+            Function::opts.evaluate = !Function::opts.evaluate;
         } else if (displayOption == "4"){
             std::cout << "Enter the base to change to." << std::endl;
             std::string newLogBase;
@@ -198,7 +198,7 @@ void setOptions(){
             } catch (const std::exception& e){
                 std::cout << "Log base entered must be a positive real number not equal to one, or you can enter \"e\". The base's value remains " << Function::opts.base << std::endl;
             }
-            Function::opts.evaluateuate = !Function::opts.evaluateuate;
+            Function::opts.evaluate = !Function::opts.evaluate;
         } else {
             std::cout << "Please enter d, or an integer between 0 and 4 inclusive\n";
         }
@@ -235,7 +235,7 @@ int main(int argc, const char * argv[]) {
             std::cout << "Simplified function is: " << '\n';
             std::cout << *simpleF;
         }
-        if (Function::opts.evaluateuate){
+        if (Function::opts.evaluate){
             std::cout << "Enter argument: " << std::endl;
             std::cin >> arg;
             std::cout << f->getName() << "(" << arg << ") = " << f->evaluate(arg) << '\n';
