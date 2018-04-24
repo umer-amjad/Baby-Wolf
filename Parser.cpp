@@ -4,9 +4,10 @@
 //
 //
 
-#include <map>
-
 #include "Parser.hpp"
+
+#include <map>
+#include <iostream>
 
 const std::vector<char> ops{'+', '-', '*', '/', '^'};
 const std::vector<std::string> unaryFns{"asinh", "acosh", "atanh", "asech", "acsch", "acoth","asin", "acos", "atan", "asec", "acsc", "acot", "sinh", "cosh", "tanh", "sech", "csch", "coth", "sin", "cos", "tan", "sec", "csc", "cot", "log", "ln"};

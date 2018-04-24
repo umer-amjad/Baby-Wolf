@@ -7,6 +7,7 @@
 #define Tests_hpp
 
 #include <assert.h>
+#include <iostream>
 
 #include "Parser.hpp"
 

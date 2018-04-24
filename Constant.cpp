@@ -6,6 +6,8 @@
 
 #include "Constant.hpp"
 
+#include <sstream>
+
 Constant::Constant(double val): val(val){}
 
 Constant::Constant(const Constant& c){

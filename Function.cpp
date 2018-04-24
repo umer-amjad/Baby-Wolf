@@ -6,6 +6,8 @@
 
 #include "Function.hpp"
 
+#include <iostream>
+
 Options Function::opts{true, false, false, true};
 std::map<std::string, const Function*> Function::userFunctions{};
 
@@ -133,11 +135,6 @@ bool Function::setName(std::string name){
 
 
 std::ostream& operator<<(std::ostream& o, const Function& fn){
-//    auto iter = std::find(Function::userFunctions.begin(), Function::userFunctions.end(), &fn);
-//    int index = (int) (iter - Function::userFunctions.begin());
-//    if (iter == Function::userFunctions.end()){
-//        index = -1;
-//    }
     std::string name = fn.functionName;
     if (name == ""){
         name = "unnamed";

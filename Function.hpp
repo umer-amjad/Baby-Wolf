@@ -8,14 +8,11 @@
 #define Function_hpp
 
 #include <string>
-#include <sstream>
-#include <iostream>
-#include <iomanip> //for decimal output
+#include <iosfwd> //forward declare iostream and stringstream
 #include <map>
 #include <cmath>
-#include <memory>
 #include <vector>
-#include <utility>
+#include <utility> // for pairs
 
 enum FunctionType {VARIADIC, UNARY, ARGUMENT, CONSTANT};
 
