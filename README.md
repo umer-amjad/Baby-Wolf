@@ -24,7 +24,7 @@ Features to be added recently include:
   - ~~inverses of the six trig functions~~
   - ~~hyperbolic trig functions~~
   - ~~inverses to the hyperbolic trig functions~~
-  - logarithms
+  - ~~logarithms~~
 - Display LaTeX string of inputted function
 - ~~Parse absolute valued expressions in a smarter way, in particular recognizing and differentiating the "starting" vertical bar and the "ending" vertical bar~~
 - ~~Allow user defined functions to be used in future function definitions, allowing for function substitution within a user defined function, e.g. "f_1(x) = x+3", "f_2(x) = x(x+1)*f_1(x^2)"~~
@@ -32,7 +32,7 @@ Features to be added recently include:
 
 
 Features planned for further down the line are:
-- Find the derivative of an input function and evaluate values of the derivative at some point
-- Generate a graph of the inputted function 
+- Find the derivative of an input function and evaluate values of the derivative at some point (in progress)
+- ~~Generate a graph of the inputted function~~ (To be improved)
 - Multivariable function support
-- Better error checking conditions done during function evaluation, in case parser fails or evaluator fails or is invalid (i.e. input is out of the domain of the function), as well as messages to the user on why it failed
+- Better error checking conditions done during function evaluation, in case parser fails or evaluator fails or is invalid (i.e. input is out of the domain of the function), as well as messages to the user on why it failed (in progress)
