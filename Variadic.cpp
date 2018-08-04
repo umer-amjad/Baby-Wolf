@@ -4,6 +4,8 @@
 //
 //
 
+#include <algorithm>
+
 #include "Variadic.hpp"
 
 Variadic::Variadic(std::string o, std::vector<const Function*> fns): fns(fns) {
