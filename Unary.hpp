@@ -10,7 +10,7 @@
 #include "Function.hpp"
 #include "Constant.hpp"
 
-class Unary: public Function{
+class Unary : public Function {
     OperationType op;
     const Function* fn;
 
@@ -20,12 +20,12 @@ class Unary: public Function{
     virtual const Function* collapse() const;
     virtual std::string getPrefixString() const;
     virtual std::string getInfixString() const;
-    
+
 public:
     Unary(std::string o, const Function* fn);
     Unary(OperationType o, const Function* fn);
     Unary(const Unary& u);
-    
+
     Unary& operator=(Unary u);
 
     virtual double evaluate(double arg) const;

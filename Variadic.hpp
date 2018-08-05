@@ -13,7 +13,7 @@
 #include "Unary.hpp"
 #include "Constant.hpp"
 
-class Variadic: public Function{
+class Variadic : public Function {
     OperationType op;
     std::vector<const Function*> fns;
 
@@ -23,14 +23,14 @@ class Variadic: public Function{
     virtual const Function* collapse() const;
     virtual std::string getPrefixString() const;
     virtual std::string getInfixString() const;
-    
+
 public:
     Variadic(std::string o, std::vector<const Function*> fns);
     Variadic(OperationType o, std::vector<const Function*> fns);
     Variadic(const Variadic& v);
-    
+
     Variadic& operator=(Variadic v);
-    
+
     virtual double evaluate(double arg) const;
     virtual Function* substitute(const Function* subFn) const;
     virtual Function* derivative() const;

@@ -8,13 +8,14 @@
 
 #include <sstream>
 
-Constant::Constant(double val): val(val){}
+Constant::Constant(double val) : val(val) {
+}
 
-Constant::Constant(const Constant& c){
+Constant::Constant(const Constant& c) {
     this->val = c.val;
 }
 
-Constant& Constant::operator=(Constant c){
+Constant& Constant::operator=(Constant c) {
     std::swap(*this, c);
     return *this;
 }
@@ -22,7 +23,6 @@ Constant& Constant::operator=(Constant c){
 Function* Constant::copy() const {
     return new Constant(*this);
 }
-
 
 double Constant::evaluate(double arg) const {
     return val;
@@ -38,10 +38,10 @@ Function* Constant::derivative() const {
 
 std::string Constant::getPrefixString() const {
     std::stringstream stream;
-    if (val == M_PI){
+    if (val == M_PI) {
         return "π";
     }
-    if (val == M_E){
+    if (val == M_E) {
         return "e";
     }
     stream << val;

@@ -9,16 +9,16 @@
 
 #include "Function.hpp"
 
-class Constant: public Function{
+class Constant : public Function {
     double val;
-    
+
     virtual Function* collapse() const;
     virtual Function* copy() const;
 
 public:
     Constant(double val);
     Constant(const Constant& c);
-    
+
     Constant& operator=(Constant c);
 
     virtual double evaluate(double arg) const;

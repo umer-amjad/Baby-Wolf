@@ -9,7 +9,7 @@
 
 #include "Function.hpp"
 
-class Argument: public Function{
+class Argument : public Function {
     virtual Function* collapse() const;
     virtual Function* copy() const;
 public:
