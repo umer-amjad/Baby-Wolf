@@ -33,7 +33,7 @@ double Unary::evaluate(double arg) const {
     switch (op) {
         case NEG: return -1 * result;
         case INV: return 1 / result;
-        case ABS: return abs(result);
+        case ABS: return std::abs(result);
         case LN: return log(result); //natural logarithm
         case LOG: return log(result) / log(opts.base); //log base b
         case SIN: return sin(result);

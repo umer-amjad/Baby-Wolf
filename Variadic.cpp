@@ -97,9 +97,8 @@ const Function* Variadic::wrap() const {
         case MINUS:
         {
             wrapFns.emplace_back((*fns.begin())->wrap());
-            auto it = fns.begin() + 1;
             wrapOp = PLUS;
-            for (; it != fns.end(); it++) {
+            for (auto it = fns.begin() + 1; it != fns.end(); it++) {
                 wrapFns.emplace_back(new Unary(NEG, (*it)->wrap()));
             }
             break;
@@ -107,9 +106,8 @@ const Function* Variadic::wrap() const {
         case DIVIDE:
         {
             wrapFns.emplace_back((*fns.begin())->wrap());
-            auto it = fns.begin() + 1;
             wrapOp = TIMES;
-            for (; it != fns.end(); it++) {
+            for (auto it = fns.begin() + 1; it != fns.end(); it++) {
                 wrapFns.emplace_back(new Unary(INV, (*it)->wrap()));
             }
             break;
@@ -126,7 +124,7 @@ const Function* Variadic::wrap() const {
         }
         default:
         {
-            for (auto f : fns) {
+            for (const auto& f : fns) {
                 wrapFns.emplace_back(f->wrap());
             }
         }
@@ -136,7 +134,7 @@ const Function* Variadic::wrap() const {
 
 const Function* Variadic::flatten() const {
     std::vector<const Function*> flatFns;
-    for (auto fn : fns) {
+    for (const auto& fn : fns) {
         const Function* flatFn = fn->flatten();
         //std::cout << "Flattened token is " << *flatFn << std::endl; //debug
         if (flatFn->getType() == FunctionType::VARIADIC &&
