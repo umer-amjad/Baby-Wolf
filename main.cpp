@@ -228,7 +228,7 @@ int main(int argc, const char * argv[]) {
         std::cout << "Function is: " << '\n';
         std::cout << *f;
         std::cout << "Derivative is: " << '\n';
-        std::cout << *(f->derivative());
+        std::cout << *(f->simplify()->derivative()->simplify());
         //init_x(f);
         if (Function::opts.simplify){
             const Function* simpleF(f->simplify());
