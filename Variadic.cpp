@@ -96,7 +96,7 @@ const Function* Variadic::wrap() const {
     switch (op) {
         case MINUS:
         {
-            wrapFns.emplace_back((*fns.begin())->wrap());
+            wrapFns.emplace_back(fns[0]->wrap());
             wrapOp = PLUS;
             for (auto it = fns.begin() + 1; it != fns.end(); it++) {
                 wrapFns.emplace_back(new Unary(NEG, (*it)->wrap()));
@@ -105,7 +105,7 @@ const Function* Variadic::wrap() const {
         }
         case DIVIDE:
         {
-            wrapFns.emplace_back((*fns.begin())->wrap());
+            wrapFns.emplace_back(fns[0]->wrap());
             wrapOp = TIMES;
             for (auto it = fns.begin() + 1; it != fns.end(); it++) {
                 wrapFns.emplace_back(new Unary(INV, (*it)->wrap()));
@@ -115,7 +115,7 @@ const Function* Variadic::wrap() const {
         case POWER:
         {
             if (fns.size() > 2) {
-                wrapFns.emplace_back((*fns.begin())->wrap());
+                wrapFns.emplace_back(fns[0]->wrap());
                 std::vector<const Function*> restFns(fns.begin() + 1, fns.end());
                 wrapFns.emplace_back((new Variadic(POWER, restFns))->wrap());
                 break;
