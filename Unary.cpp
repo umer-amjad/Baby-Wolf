@@ -5,6 +5,7 @@
 //
 
 #include "Unary.hpp"
+#include "Variadic.hpp"
 
 Unary::Unary(std::string o, const Function* fn) : fn(fn) {
     op = stringToOperationType[o];
@@ -70,23 +71,71 @@ Function* Unary::substitute(const Function* subFn) const {
 }
 
 Function* Unary::derivative() const {
-    //still need to implement for all supported unary functions
+    // unary is of the form h = g(f), so h' = f' * g'(f)
+    // add f' to the chain rule
+    std::vector<const Function*> chain{fn->derivative()};
+    Function* gpf = nullptr; // this is g'(f) 
+    switch (op) {
+        case NEG: gpf = new Constant(-1);
+            break;
+        case INV: gpf = new Unary(NEG, new Variadic(POWER, {fn->copy, new Constant(2)}));
+            break;
+        case ABS: gpf = new Constant(1); // for now, if g = |f|, g' = f' * 1
+            break;
+        case LN: gpf = new Unary(INV, fn->copy); //natural logarithm
+            break;
+        case LOG: gpf = new Variadic(TIMES, {new Constant(1/log(opts.base)), new Unary(INV, fn->copy)});
+            break;
+        case SIN: gpf = new Unary(COS, fn->copy);
+            break;
+        case COS: gpf = new Unary(NEG, new Unary(SIN, fn->copy));
+        break;
+        case TAN: gpf = new Variadic(POWER, {new Unary(SEC, fn->copy), new Constant(2)});
+        break;
+        case SEC: gpf = new Variadic(TIMES, {new Unary(TAN, fn->copy), new Unary(SEC, fn->copy)});
+        break;
+        case CSC: gpf = new Unary(INV, new Variadic(TIMES, {new Unary(COT, fn->copy), new Unary(CSC, fn->copy)}));
+        break;
+        case COT: 
+        case ASIN:
+        case ACOS: 
+        case ATAN: 
+        case ASEC:
+        case ACSC: 
+        case ACOT: 
+        case SINH: 
+        case COSH: 
+        case TANH: 
+        case SECH: 
+        case CSCH: 
+        case COTH:
+        case ASINH: 
+        case ACOSH: 
+        case ATANH: 
+        case ASECH: 
+        case ACSCH: 
+        case ACOTH: 
+        case INVALID: return 0;
+        default: return 0;
+    }
     return fn->derivative();
 }
 
 const Function* Unary::wrap() const {
     const Function* wrapFn = fn->wrap();
+
     return new Unary(op, wrapFn);
 }
 
 const Function* Unary::flatten() const {
     const Function* flatFn = fn->flatten();
-    //std::cout << "Before flattening " << *flatFn << std::endl; //debug
+            //std::cout << "Before flattening " << *flatFn << std::endl; //debug
     if (flatFn->getType() == FunctionType::UNARY && flatFn->getOperation() == op) {
         if (op == ABS) {
             return flatFn;
         }//else is negative of negative, or reciprocal of reciprocal
         else if (op == NEG || op == INV) {
+
             return flatFn->getFns().first;
         }
     }
@@ -98,6 +147,7 @@ const Function* Unary::collapse() const {
     const Function* simpleFn = fn->collapse();
 
     if (simpleFn->getType() == FunctionType::CONSTANT) {
+
         return new Constant(this->evaluate(0)); //value of argument doesn't matter
     }
 
@@ -106,11 +156,12 @@ const Function* Unary::collapse() const {
 
 std::string Unary::getPrefixString() const {
     std::string str = "";
-    str += "(";
-    str += operationToString[op];
-    str += " ";
-    str += fn->getPrefixString();
-    str += ")";
+            str += "(";
+            str += operationToString[op];
+            str += " ";
+            str += fn->getPrefixString();
+            str += ")";
+
     return str;
 }
 
@@ -124,28 +175,32 @@ std::string Unary::getInfixString() const {
         str += "|";
     } else {
         str += "(";
-        str += operationToString[op];
-        str += " ";
+                str += operationToString[op];
+                str += " ";
     }
     str += fn->getInfixString();
     if (op == ABS) {
         str += "|";
     } else {
+
         str += ")";
     }
     return str;
 }
 
 FunctionType Unary::getType() const {
+
     return FunctionType::UNARY;
 }
 
 OperationType Unary::getOperation() const {
+
     return op;
 }
 
 std::pair<const Function*, std::vector<const Function*>> Unary::getFns() const {
-    return {fn, std::vector<const Function*>()};
+
+    return{fn, std::vector<const Function*>()};
 }
 
 Unary::~Unary() {
