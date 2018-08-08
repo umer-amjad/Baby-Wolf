@@ -7,12 +7,15 @@
 #ifndef Function_hpp
 #define Function_hpp
 
+#include <cmath>
 #include <string>
 #include <iosfwd> //forward declare iostream and stringstream
 #include <map>
-#include <cmath>
 #include <vector>
 #include <utility> // for pairs
+
+constexpr double M_PI = 3.14159265358979323846;  // pi 
+constexpr double M_E = 2.71828182845904523536;  // e
 
 enum FunctionType {
     VARIADIC, UNARY, ARGUMENT, CONSTANT

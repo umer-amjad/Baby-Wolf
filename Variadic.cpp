@@ -84,7 +84,7 @@ Function* Variadic::derivative() const {
         Function* f_inv = new Unary(INV, f->copy());
         Function* abs_f = new Unary(ABS, f->copy());
         Function* ln_abs_f = new Unary(LN, abs_f);
-        std::vector<const Function*> product1{g->copy, f_inv, f_prime};
+        std::vector<const Function*> product1{g->copy(), f_inv, f_prime};
         std::vector<const Function*> product2{g_prime, ln_abs_f};
         return new Variadic(TIMES, 
                 {new Variadic(POWER, {f, g}), 
