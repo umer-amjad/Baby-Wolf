@@ -209,6 +209,13 @@ const Function* Variadic::collapse() const {
         for (; fn != collapseFns.end(); fn++) {
             delete *fn;
         }
+        if (op == TIMES && result == 0){
+        //delete all fns, return 0
+            for (auto& fn: simpleFns){
+                delete fn;
+            }
+            return new Constant(0);
+        }
     }
     switch (simpleFns.size()) {
         case 0:
