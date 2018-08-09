@@ -90,7 +90,7 @@ std::string OperationTypeToString(OperationType o){
 }
 
 void Function::initalizeOperationTypeMaps(){
-    for (OperationType type = PLUS; type < ACOTH; type = (OperationType)(type + 1)){
+    for (OperationType type = PLUS; type != INVALID; type = (OperationType)(type + 1)){
         std::string typeString = OperationTypeToString(type);
         operationToString[type] = typeString;
         stringToOperationType[typeString] = type;

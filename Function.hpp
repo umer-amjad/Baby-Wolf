@@ -18,7 +18,7 @@ constexpr double M_PI = 3.14159265358979323846;  // pi
 constexpr double M_E = 2.71828182845904523536;  // e
 
 enum FunctionType {
-    VARIADIC, UNARY, ARGUMENT, CONSTANT
+    VARIADIC = 0, UNARY, ARGUMENT, CONSTANT
 };
 
 enum OperationType {
@@ -29,7 +29,7 @@ enum OperationType {
     ASIN, ACOS, ATAN, ASEC, ACSC, ACOT, //6
     SINH, COSH, TANH, SECH, CSCH, COTH, //6
     ASINH, ACOSH, ATANH, ASECH, ACSCH, ACOTH, //6,
-    INVALID = -1 //1 - 35 in total
+    INVALID //1 - 35 in total
 };
 
 struct Options {

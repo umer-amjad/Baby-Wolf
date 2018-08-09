@@ -70,10 +70,8 @@ Function* Variadic::substitute(const Function* subFn) const {
 }
 
 Function* Variadic::derivative() const {
-    //implemented for + and *
-    //still need to implement for ^ operator
     std::vector<const Function*> derivedFns;
-    int i = 0;
+    // if op is ^
     if (op == POWER) {
         //must have exactly two fns, f^g
         Function* f = fns[0]->copy();
@@ -84,15 +82,14 @@ Function* Variadic::derivative() const {
         Function* f_inv = new Unary(INV, f->copy());
         Function* abs_f = new Unary(ABS, f->copy());
         Function* ln_abs_f = new Unary(LN, abs_f);
-        std::vector<const Function*> product1{g->copy(), f_inv, f_prime};
-        std::vector<const Function*> product2{g_prime, ln_abs_f};
         return new Variadic(TIMES, 
                 {new Variadic(POWER, {f, g}), 
                 new Variadic(PLUS, 
-                    {new Variadic(TIMES, product1),
-                    new Variadic(TIMES, product2)})});
+                    {new Variadic(TIMES, {g->copy(), f_inv, f_prime}),
+                    new Variadic(TIMES, {g_prime, ln_abs_f})})});
     }
     // else OP is + or *
+    int i = 0;
     for (auto& fn : fns) {
         Function* derivedInner = fn->derivative();
         if (op == TIMES) {
