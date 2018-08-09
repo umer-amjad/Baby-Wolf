@@ -73,44 +73,39 @@ Function* Unary::substitute(const Function* subFn) const {
 Function* Unary::derivative() const {
     // unary is of the form h = g(f), so h' = f' * g'(f)
     // add f' to the chain rule
-    std::vector<const Function*> chain{fn->derivative()};
+    Function* fp = fn->derivative();
     Function* gpf = nullptr; // this is g'(f) 
     switch (op) {
-        case NEG: gpf = new Constant(-1);
-            break;
-        case INV: gpf = new Unary(NEG, new Variadic(POWER,{fn->copy, new Constant(2)}));
-            break;
-        case ABS: gpf = new Constant(1); // for now, if g = |f|, g' = f' * 1
-            break;
-        case LN: gpf = new Unary(INV, fn->copy()); //natural logarithm
-            break;
-        case LOG: gpf = new Variadic(TIMES,{new Constant(1 / log(opts.base)), new Unary(INV, fn->copy())});
-            break;
-        case SIN: gpf = new Unary(COS, fn->copy());
-            break;
-        case COS: gpf = new Unary(NEG, new Unary(SIN, fn->copy()));
-            break;
-        case TAN: gpf = new Variadic(POWER,{new Unary(SEC, fn->copy()), new Constant(2)});
-            break;
-        case ASIN: gpf = new Unary(INV, new Variadic(POWER,{new Variadic(PLUS,
+        case LN: return new Variadic(TIMES, {new Unary(INV, fn->copy()), fp}); //natural logarithm
+        case NEG: return new Unary(NEG, fp);
+        case INV: return new Variadic(TIMES, {new Unary(NEG, new Variadic(POWER,{fn->copy, new Constant(2)})), fp});
+        case ABS: return fp; // for now, if g = |f|, g' = f'
+        case LOG: return new Variadic(TIMES, {new Constant(1 / log(opts.base)), new Unary(INV, fn->copy())});
+        case SIN: return new Variadic(TIMES, {new Unary(COS, fn->copy()), fp});
+        case COS: return new Variadic(TIMES, {new Unary(NEG, new Unary(SIN, fn->copy())), fp});
+        case TAN: return new Variadic(TIMES, {new Variadic(POWER,{new Unary(SEC, fn->copy()), new Constant(2)}), fp});
+        case ASIN: return new Variadic(TIMES, {new Unary(INV, new Variadic(POWER,{new Variadic(PLUS,
                 {new Constant(1),
                     new Unary(NEG, new Variadic(POWER,
-                    {fn->copy(), new Constant(2)}))}), new Constant(1 / 2)}));
-            break;
-        case ACOS: gpf = new Unary(NEG, new Unary(INV, new Variadic(POWER,{new Variadic(PLUS,
+                {fn->copy(), new Constant(2)}))}), new Constant(1 / 2)})), fp});
+        case ACOS: return new Variadic(TIMES, {new Unary(NEG, new Unary(INV, new Variadic(POWER,{new Variadic(PLUS,
                 {new Constant(1),
                     new Unary(NEG, new Variadic(POWER,
-                    {fn->copy(), new Constant(2)}))}), new Constant(1 / 2)})));
-            break;
-        case ATAN: gpf = new Unary(INV, new Variadic(PLUS,{new Constant(1), new Variadic(POWER,
-                {fn->copy(), 2})}));
-            break;
-        case SINH:
-        case COSH:
-        case TANH:
-        case ASINH:
-        case ACOSH:
-        case ATANH:
+                    {fn->copy(), new Constant(2)}))}), new Constant(1 / 2)}))), fp});
+        case ATAN: return new Variadic(TIMES, {new Unary(INV, new Variadic(PLUS,{new Constant(1), new Variadic(POWER,
+                {fn->copy(), 2})})), fp});
+        case SINH: return new Variadic(TIMES, {new Unary(COSH, fn->copy()), fp});
+        case COSH: return new Variadic(TIMES, {new Unary(SINH, fn->copy()), fp});
+        case TANH: return new Variadic(TIMES, {new Variadic(POWER,{new Unary(SECH, fn->copy()), new Constant(2)}), fp});
+        case ASINH: return new Variadic(TIMES, {new Unary(INV, new Variadic(POWER, {new Variadic(PLUS,
+                {new Constant(1),
+                 new Variadic(POWER,
+                {fn->copy(), new Constant(2)})}), new Constant(1 / 2)})), fp});
+        case ACOSH: return new Variadic(TIMES, {new Unary(INV, new Variadic(POWER,{new Variadic(PLUS,
+                {new Variadic(POWER, {fn->copy(), new Constant(2)}),
+                 new Unary(NEG, new Constant(1))}), new Constant(1 / 2)})), fp});
+        case ATANH: return new Variadic(TIMES, {new Unary(INV, new Variadic(PLUS,{new Constant(1), new Unary(NEG, new Variadic(POWER,
+                {fn->copy(), 2}))})), fp});
         //functions should not exist after wrapping
         case SEC: 
         case CSC:
@@ -127,7 +122,6 @@ Function* Unary::derivative() const {
         case INVALID:
         default: return new Constant(0);
     }
-    return fn->derivative();
 }
 
 const Function* Unary::wrap() const {
