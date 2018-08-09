@@ -78,7 +78,7 @@ Function* Unary::derivative() const {
     switch (op) {
         case LN: return new Variadic(TIMES, {new Unary(INV, fn->copy()), fp}); //natural logarithm
         case NEG: return new Unary(NEG, fp);
-        case INV: return new Variadic(TIMES, {new Unary(NEG, new Variadic(POWER,{fn->copy, new Constant(2)})), fp});
+        case INV: return new Variadic(TIMES, {new Unary(NEG, new Variadic(POWER,{fn->copy(), new Constant(2)})), fp});
         case ABS: return fp; // for now, if g = |f|, g' = f'
         case LOG: return new Variadic(TIMES, {new Constant(1 / log(opts.base)), new Unary(INV, fn->copy())});
         case SIN: return new Variadic(TIMES, {new Unary(COS, fn->copy()), fp});
@@ -92,8 +92,8 @@ Function* Unary::derivative() const {
                 {new Constant(1),
                     new Unary(NEG, new Variadic(POWER,
                     {fn->copy(), new Constant(2)}))}), new Constant(1 / 2)}))), fp});
-        case ATAN: return new Variadic(TIMES, {new Unary(INV, new Variadic(PLUS,{new Constant(1), new Variadic(POWER,
-                {fn->copy(), 2})})), fp});
+        case ATAN: return new Variadic(TIMES, {new Unary(INV, new Variadic(PLUS, {new Constant(1), new Variadic(POWER,
+                {fn->copy(), new Constant(2)})})), fp});
         case SINH: return new Variadic(TIMES, {new Unary(COSH, fn->copy()), fp});
         case COSH: return new Variadic(TIMES, {new Unary(SINH, fn->copy()), fp});
         case TANH: return new Variadic(TIMES, {new Variadic(POWER,{new Unary(SECH, fn->copy()), new Constant(2)}), fp});
@@ -105,7 +105,7 @@ Function* Unary::derivative() const {
                 {new Variadic(POWER, {fn->copy(), new Constant(2)}),
                  new Unary(NEG, new Constant(1))}), new Constant(1 / 2)})), fp});
         case ATANH: return new Variadic(TIMES, {new Unary(INV, new Variadic(PLUS,{new Constant(1), new Unary(NEG, new Variadic(POWER,
-                {fn->copy(), 2}))})), fp});
+                {fn->copy(), new Constant(2)}))})), fp});
         //functions should not exist after wrapping
         case SEC: 
         case CSC:
