@@ -78,58 +78,81 @@ Function* Unary::derivative() const {
     switch (op) {
         case NEG: gpf = new Constant(-1);
             break;
-        case INV: gpf = new Unary(NEG, new Variadic(POWER, {fn->copy, new Constant(2)}));
+        case INV: gpf = new Unary(NEG, new Variadic(POWER,{fn->copy, new Constant(2)}));
             break;
         case ABS: gpf = new Constant(1); // for now, if g = |f|, g' = f' * 1
             break;
-        case LN: gpf = new Unary(INV, fn->copy); //natural logarithm
+        case LN: gpf = new Unary(INV, fn->copy()); //natural logarithm
             break;
-        case LOG: gpf = new Variadic(TIMES, {new Constant(1/log(opts.base)), new Unary(INV, fn->copy)});
+        case LOG: gpf = new Variadic(TIMES,{new Constant(1 / log(opts.base)), new Unary(INV, fn->copy())});
             break;
-        case SIN: gpf = new Unary(COS, fn->copy);
+        case SIN: gpf = new Unary(COS, fn->copy());
             break;
-        case COS: gpf = new Unary(NEG, new Unary(SIN, fn->copy));
-        break;
-        case TAN: gpf = new Variadic(POWER, {new Unary(SEC, fn->copy), new Constant(2)});
-        break;
-        case SEC: gpf = new Variadic(TIMES, {new Unary(TAN, fn->copy), new Unary(SEC, fn->copy)});
-        break;
-        case CSC: gpf = new Unary(INV, new Variadic(TIMES, {new Unary(COT, fn->copy), new Unary(CSC, fn->copy)}));
-        break;
-        case COT: 
-        case ASIN:
-        case ACOS: 
-        case ATAN: 
-        case ASEC:
+        case COS: gpf = new Unary(NEG, new Unary(SIN, fn->copy()));
+            break;
+        case TAN: gpf = new Variadic(POWER,{new Unary(SEC, fn->copy()), new Constant(2)});
+            break;
+        case ASIN: gpf = new Unary(INV, new Variadic(POWER,{new Variadic(PLUS,
+                {new Constant(1),
+                    new Unary(NEG, new Variadic(POWER,
+                    {fn->copy(), new Constant(2)}))}), new Constant(1 / 2)}));
+            break;
+        case ACOS: gpf = new Unary(NEG, new Unary(INV, new Variadic(POWER,{new Variadic(PLUS,
+                {new Constant(1),
+                    new Unary(NEG, new Variadic(POWER,
+                    {fn->copy(), new Constant(2)}))}), new Constant(1 / 2)})));
+            break;
+        case ATAN: gpf = new Unary(INV, new Variadic(PLUS,{new Constant(1), new Variadic(POWER,
+                {fn->copy(), 2})}));
+            break;
+        case SINH:
+        case COSH:
+        case TANH:
+        case ASINH:
+        case ACOSH:
+        case ATANH:
+        //functions should not exist after wrapping
+        case SEC: 
+        case CSC:
+        case COT:
+        case ASEC: 
         case ACSC: 
         case ACOT: 
-        case SINH: 
-        case COSH: 
-        case TANH: 
         case SECH: 
         case CSCH: 
-        case COTH:
-        case ASINH: 
-        case ACOSH: 
-        case ATANH: 
+        case COTH: 
         case ASECH: 
         case ACSCH: 
         case ACOTH: 
-        case INVALID: return 0;
-        default: return 0;
+        case INVALID:
+        default: return new Constant(0);
     }
     return fn->derivative();
 }
 
 const Function* Unary::wrap() const {
     const Function* wrapFn = fn->wrap();
-
-    return new Unary(op, wrapFn);
+    switch (op) {
+        case SEC: return new Unary(INV, new Unary(COS, wrapFn));
+        case CSC: return new Unary(INV, new Unary(SIN, wrapFn));
+        case COT: return new Unary(INV, new Unary(TAN, wrapFn));
+        case ASEC: return new Unary(ACOS, new Unary(INV, wrapFn));
+        case ACSC: return new Unary(ASIN, new Unary(INV, wrapFn));
+        case ACOT: return new Unary(ATAN, new Unary(INV, wrapFn));
+        case SECH: return new Unary(INV, new Unary(COSH, wrapFn));
+        case CSCH: return new Unary(INV, new Unary(SINH, wrapFn));
+        case COTH: return new Unary(INV, new Unary(TANH, wrapFn));
+        case ASECH: return new Unary(ACOSH, new Unary(INV, wrapFn));
+        case ACSCH: return new Unary(ASINH, new Unary(INV, wrapFn));
+        case ACOTH: return new Unary(ATANH, new Unary(INV, wrapFn));
+        case INVALID: return new Constant(0);
+        default: return new Unary(op, wrapFn);
+    }
 }
 
 const Function* Unary::flatten() const {
     const Function* flatFn = fn->flatten();
-            //std::cout << "Before flattening " << *flatFn << std::endl; //debug
+    //std::cout << "Before flattening " << *flatFn << std::endl; //debug
     if (flatFn->getType() == FunctionType::UNARY && flatFn->getOperation() == op) {
         if (op == ABS) {
             return flatFn;
@@ -156,11 +179,11 @@ const Function* Unary::collapse() const {
 
 std::string Unary::getPrefixString() const {
     std::string str = "";
-            str += "(";
-            str += operationToString[op];
-            str += " ";
-            str += fn->getPrefixString();
-            str += ")";
+    str += "(";
+    str += operationToString[op];
+    str += " ";
+    str += fn->getPrefixString();
+    str += ")";
 
     return str;
 }
@@ -175,8 +198,8 @@ std::string Unary::getInfixString() const {
         str += "|";
     } else {
         str += "(";
-                str += operationToString[op];
-                str += " ";
+        str += operationToString[op];
+        str += " ";
     }
     str += fn->getInfixString();
     if (op == ABS) {
