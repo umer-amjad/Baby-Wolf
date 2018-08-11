@@ -102,12 +102,6 @@ OperationType AbstractFunction::getOperation() const {
     return INVALID;
 }
 
-const Function AbstractFunction::simplify() const {
-    const Function simplified = this->wrap().flatten().collapse().flatten();
-    //userFunctions.push_back(simplified);
-    return simplified;
-}
-
 std::pair<const Function, std::vector<Function>> AbstractFunction::getFns() const {
     return {nullptr, std::vector< Function>()};
 }

@@ -15,6 +15,12 @@ Function::Function(double value) : f(new Constant(value)) {}
 Function::Function(OperationType op, Function fn) : f(new Unary(op, fn)) {}
 Function::Function(OperationType op, std::vector<Function> fns) : f(new Variadic(op, fns)) {}
 
+const Function Function::simplify() const {
+    const Function simplified = this->wrap().flatten().collapse().flatten();
+    //userFunctions.push_back(simplified);
+    return simplified;
+}
+
 std::string Function::getName() const {
     return name;
 }

@@ -42,6 +42,18 @@ class Function : public AbstractFunction {
         return f->getInfixString();
     }
     
+    virtual FunctionType getType() const {
+        return f->getType();
+    }
+    
+    virtual OperationType getOperation() const {
+        return f->getOperation();
+    }
+    
+    virtual std::pair<const Function, std::vector<Function>> getFns() const {
+        return f->getFns();
+    }
+    
 public:
     //Create Argument(default), Constant, Unary, Variadic respectively
     Function();
@@ -53,6 +65,27 @@ public:
     
     Function(const Function& orig) : f(orig.copy()), name(orig.name) {
     }
+    
+    Function& operator=(const Function& orig) {
+        delete f;
+        f = orig.copy();
+        name = orig.name;
+        return *this;
+    }
+    
+    Function(Function&& moved) : f(moved.f) {
+        name = std::move(moved.name);
+        moved.f = nullptr;
+    } 
+    
+    Function& operator=(Function&& moved) {
+        delete f;
+        f = moved.f;
+        name = std::move(moved.name);
+        moved.f = nullptr;
+        return *this;
+    }
+    
     
     virtual double evaluate(double arg) const {
         return f->evaluate(arg);
@@ -66,17 +99,8 @@ public:
         return f->derivative();
     }
     
-    virtual FunctionType getType() const {
-        return f->getType();
-    }
-    
-    virtual OperationType getOperation() const {
-        return f->getOperation();
-    }
-    
-    virtual std::pair<const Function, std::vector<Function>> getFns() const {
-        return f->getFns();
-    }
+    //returns arithmetically simplified function - NOTE: returns new-ly allocated function
+    const Function simplify() const;
     
     bool isNull() const {
         return f == nullptr;

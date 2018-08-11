@@ -94,7 +94,7 @@ Function Variadic::derivative() const {
 }
 
 const Function Variadic::wrap() const {
-    //std::cout << "Before wrapping: " << *this << " end\n"; DEBUG
+    std::cout << "Before wrapping: " << this->getInfixString() << " end\n"; //DEBUG
     OperationType wrapOp = op;
     std::vector<Function> wrapFns;
     switch (op) {
@@ -154,7 +154,7 @@ const Function Variadic::flatten() const {
 }
 
 const Function Variadic::collapse() const {
-    //std::cout << "Before collapsing: " << *this << " end\n"; DEBUG
+    std::cout << "Before collapsing: " << this->getPrefixString() << " end" << std::endl;// DEBUG
     std::vector<Function> collapseFns;
     std::transform(fns.begin(), fns.end(), std::back_inserter(collapseFns),
             [](const Function& f) -> const Function {
@@ -169,12 +169,13 @@ const Function Variadic::collapse() const {
         }
         return powerFn;
     }
+    std::cout << "Here 10" << std::endl;        
     //sort can only be done for + and *, not power:
     std::stable_sort(collapseFns.begin(), collapseFns.end(),
-            [](const Function a, const Function  b) -> bool{
+            [](const Function& a, const Function& b) -> bool {
                 return a.getType() < b.getType();
             });
-    //std::cout << "Before collapsing 2: " << *(new Variadic(op, collapseFns)) << " end\n"; //DEBUG
+    std::cout << "Before collapsing 2 " << std::endl; //DEBUG
     std::vector<Function> simpleFns;
     auto fn = collapseFns.begin();
     for (; fn != collapseFns.end(); fn++) {

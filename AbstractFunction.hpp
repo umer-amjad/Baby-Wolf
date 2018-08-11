@@ -96,10 +96,7 @@ public:
 
     //returns derivative of function
     virtual Function derivative() const = 0;
-
-    //returns arithmetically simplified function - NOTE: returns new-ly allocated function
-    const Function simplify() const;
-
+    
     //virtual destructor
     virtual ~AbstractFunction() {
     };
