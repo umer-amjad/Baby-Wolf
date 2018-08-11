@@ -63,55 +63,53 @@ Function Unary::derivative() const {
     // unary is of the form h = g(f), so h' = f' * g'(f)
     // add f' to the chain rule
     Function fp = fn.derivative();
-    Function gpf = nullptr; // this is g'(f) 
-    return Function(); //need to uncomment the below
-//    switch (op) {
-//        case LN: return new Variadic(TIMES, {new Unary(INV, fn->copy()), fp}); //natural logarithm
-//        case NEG: return new Unary(NEG, fp);
-//        case INV: return new Variadic(TIMES, {new Unary(NEG, new Variadic(POWER,{fn->copy(), new Constant(2)})), fp});
-//        case ABS: return fp; // for now, if g = |f|, g' = f'
-//        case LOG: return new Variadic(TIMES, {new Constant(1 / log(opts.base)), new Unary(INV, fn->copy())});
-//        case SIN: return new Variadic(TIMES, {new Unary(COS, fn->copy()), fp});
-//        case COS: return new Variadic(TIMES, {new Unary(NEG, new Unary(SIN, fn->copy())), fp});
-//        case TAN: return new Variadic(TIMES, {new Variadic(POWER,{new Unary(SEC, fn->copy()), new Constant(2)}), fp});
-//        case ASIN: return new Variadic(TIMES, {new Unary(INV, new Variadic(POWER,{new Variadic(PLUS,
-//                {new Constant(1),
-//                    new Unary(NEG, new Variadic(POWER,
-//                {fn->copy(), new Constant(2)}))}), new Constant(1 / 2)})), fp});
-//        case ACOS: return new Variadic(TIMES, {new Unary(NEG, new Unary(INV, new Variadic(POWER,{new Variadic(PLUS,
-//                {new Constant(1),
-//                    new Unary(NEG, new Variadic(POWER,
-//                    {fn->copy(), new Constant(2)}))}), new Constant(1 / 2)}))), fp});
-//        case ATAN: return new Variadic(TIMES, {new Unary(INV, new Variadic(PLUS, {new Constant(1), new Variadic(POWER,
-//                {fn->copy(), new Constant(2)})})), fp});
-//        case SINH: return new Variadic(TIMES, {new Unary(COSH, fn->copy()), fp});
-//        case COSH: return new Variadic(TIMES, {new Unary(SINH, fn->copy()), fp});
-//        case TANH: return new Variadic(TIMES, {new Variadic(POWER,{new Unary(SECH, fn->copy()), new Constant(2)}), fp});
-//        case ASINH: return new Variadic(TIMES, {new Unary(INV, new Variadic(POWER, {new Variadic(PLUS,
-//                {new Constant(1),
-//                 new Variadic(POWER,
-//                {fn->copy(), new Constant(2)})}), new Constant(1 / 2)})), fp});
-//        case ACOSH: return new Variadic(TIMES, {new Unary(INV, new Variadic(POWER,{new Variadic(PLUS,
-//                {new Variadic(POWER, {fn->copy(), new Constant(2)}),
-//                 new Unary(NEG, new Constant(1))}), new Constant(1 / 2)})), fp});
-//        case ATANH: return new Variadic(TIMES, {new Unary(INV, new Variadic(PLUS,{new Constant(1), new Unary(NEG, new Variadic(POWER,
-//                {fn->copy(), new Constant(2)}))})), fp});
-//        //functions should not exist after wrapping
-//        case SEC: 
-//        case CSC:
-//        case COT:
-//        case ASEC: 
-//        case ACSC: 
-//        case ACOT: 
-//        case SECH: 
-//        case CSCH: 
-//        case COTH: 
-//        case ASECH: 
-//        case ACSCH: 
-//        case ACOTH: 
-//        case INVALID:
-//        default: return new Constant(0);
-//    }
+    switch (op) {
+        case LN: return Function(TIMES, {Function(INV, fn), fp}); //natural logarithm
+        case NEG: return Function(NEG, fp);
+        case INV: return Function(TIMES, {Function(NEG, Function(POWER,{fn, Function(2)})), fp});
+        case ABS: return fp; // for now, if g = |f|, g' = f'
+        case LOG: return Function(TIMES, {Function(1 / log(opts.base)), Function(INV, fn)});
+        case SIN: return Function(TIMES, {Function(COS, fn), fp});
+        case COS: return Function(TIMES, {Function(NEG, Function(SIN, fn)), fp});
+        case TAN: return Function(TIMES, {Function(POWER,{Function(SEC, fn), Function(2)}), fp});
+        case ASIN: return Function(TIMES, {Function(INV, Function(POWER,{Function(PLUS,
+                {Function(1),
+                    Function(NEG, Function(POWER,
+                {fn, Function(2)}))}), Function(1 / 2)})), fp});
+        case ACOS: return Function(TIMES, {Function(NEG, Function(INV, Function(POWER,{Function(PLUS,
+                {Function(1),
+                    Function(NEG, Function(POWER,
+                    {fn, Function(2)}))}), Function(1 / 2)}))), fp});
+        case ATAN: return Function(TIMES, {Function(INV, Function(PLUS, {Function(1), Function(POWER,
+                {fn, Function(2)})})), fp});
+        case SINH: return Function(TIMES, {Function(COSH, fn), fp});
+        case COSH: return Function(TIMES, {Function(SINH, fn), fp});
+        case TANH: return Function(TIMES, {Function(POWER,{Function(SECH, fn), Function(2)}), fp});
+        case ASINH: return Function(TIMES, {Function(INV, Function(POWER, {Function(PLUS,
+                {Function(1),
+                 Function(POWER,
+                {fn, Function(2)})}), Function(1 / 2)})), fp});
+        case ACOSH: return Function(TIMES, {Function(INV, Function(POWER,{Function(PLUS,
+                {Function(POWER, {fn, Function(2)}),
+                 Function(NEG, Function(1))}), Function(1 / 2)})), fp});
+        case ATANH: return Function(TIMES, {Function(INV, Function(PLUS,{Function(1), Function(NEG, Function(POWER,
+                {fn, Function(2)}))})), fp});
+        //functions should not exist after wrapping
+        case SEC: 
+        case CSC:
+        case COT:
+        case ASEC: 
+        case ACSC: 
+        case ACOT: 
+        case SECH: 
+        case CSCH: 
+        case COTH: 
+        case ASECH: 
+        case ACSCH: 
+        case ACOTH: 
+        case INVALID:
+        default: return Function(0.0);
+    }
 }
 
 const Function Unary::wrap() const {

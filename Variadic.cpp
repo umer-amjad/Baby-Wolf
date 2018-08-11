@@ -67,9 +67,9 @@ Function Variadic::derivative() const {
         // derivative is f^g * (g*(1/f)*f' + g' ln |f|
         Function f_prime = f.derivative();
         Function g_prime = g.derivative();
-        Function f_inv = Function(INV, f);
-        Function abs_f = Function(ABS, f);
-        Function ln_abs_f = Function(LN, abs_f);
+        Function f_inv(INV, f);
+        Function abs_f(ABS, f);
+        Function ln_abs_f(LN, abs_f);
         return Function(TIMES, 
                 {Function(POWER, {f, g}), 
                 Function(PLUS, 
@@ -162,7 +162,7 @@ const Function Variadic::collapse() const {
             });
 
     if (op == POWER) {
-        Function powerFn = Function(op, collapseFns);
+        Function powerFn(op, collapseFns);
         if (collapseFns[0].getType() == CONSTANT && collapseFns[1].getType() == CONSTANT) {
             double result = powerFn.evaluate(0); //argument doesn't matter
             return Function(result);
