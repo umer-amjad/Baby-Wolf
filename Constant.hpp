@@ -7,13 +7,13 @@
 #ifndef Constant_hpp
 #define Constant_hpp
 
-#include "Function.hpp"
+#include "AbstractFunction.hpp"
 
-class Constant : public Function {
+class Constant : public AbstractFunction {
     double val;
 
-    virtual Function* collapse() const;
-    virtual Function* copy() const;
+    virtual AbstractFunction* collapse() const;
+    virtual AbstractFunction* copy() const;
 
 public:
     Constant(double val);
@@ -22,8 +22,8 @@ public:
     Constant& operator=(Constant c);
 
     virtual double evaluate(double arg) const;
-    virtual Function* substitute(const Function* subFn) const;
-    virtual Function* derivative() const;
+    virtual AbstractFunction* substitute(const AbstractFunction* subFn) const;
+    virtual AbstractFunction* derivative() const;
     virtual std::string getPrefixString() const;
     virtual std::string getInfixString() const;
     virtual FunctionType getType() const;

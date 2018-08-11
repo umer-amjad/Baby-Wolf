@@ -7,7 +7,7 @@
 #include "Argument.hpp"
 #include "Constant.hpp"
 
-Function* Argument::copy() const {
+AbstractFunction* Argument::copy() const {
     return new Argument;
 }
 
@@ -15,15 +15,15 @@ double Argument::evaluate(double arg) const {
     return arg;
 }
 
-Function* Argument::substitute(const Function* subFn) const {
+AbstractFunction* Argument::substitute(const AbstractFunction* subFn) const {
     return subFn->copy();
 }
 
-Function* Argument::derivative() const {
+AbstractFunction* Argument::derivative() const {
     return new Constant(1);
 }
 
-Function* Argument::collapse() const {
+AbstractFunction* Argument::collapse() const {
     return new Argument;
 }
 

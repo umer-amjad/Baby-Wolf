@@ -7,16 +7,16 @@
 #include "Unary.hpp"
 #include "Variadic.hpp"
 
-Unary::Unary(std::string o, const Function* fn) : fn(fn) {
+Unary::Unary(std::string o, const AbstractFunction* fn) : fn(fn) {
     op = stringToOperationType[o];
 }
 
-Unary::Unary(OperationType o, const Function* fn) : op(o), fn(fn) {
+Unary::Unary(OperationType o, const AbstractFunction* fn) : op(o), fn(fn) {
 }
 
 Unary::Unary(const Unary& u) {
     this->op = u.op;
-    Function* f = u.fn->copy();
+    AbstractFunction* f = u.fn->copy();
     this->fn = f;
 }
 
@@ -25,7 +25,7 @@ Unary& Unary::operator=(Unary u) {
     return *this;
 }
 
-Function* Unary::copy() const {
+AbstractFunction* Unary::copy() const {
     return new Unary(*this);
 }
 
@@ -66,15 +66,15 @@ double Unary::evaluate(double arg) const {
     }
 }
 
-Function* Unary::substitute(const Function* subFn) const {
+AbstractFunction* Unary::substitute(const AbstractFunction* subFn) const {
     return new Unary(op, fn->substitute(subFn));
 }
 
-Function* Unary::derivative() const {
+AbstractFunction* Unary::derivative() const {
     // unary is of the form h = g(f), so h' = f' * g'(f)
     // add f' to the chain rule
-    Function* fp = fn->derivative();
-    Function* gpf = nullptr; // this is g'(f) 
+    AbstractFunction* fp = fn->derivative();
+    AbstractFunction* gpf = nullptr; // this is g'(f) 
     switch (op) {
         case LN: return new Variadic(TIMES, {new Unary(INV, fn->copy()), fp}); //natural logarithm
         case NEG: return new Unary(NEG, fp);
@@ -124,8 +124,8 @@ Function* Unary::derivative() const {
     }
 }
 
-const Function* Unary::wrap() const {
-    const Function* wrapFn = fn->wrap();
+const AbstractFunction* Unary::wrap() const {
+    const AbstractFunction* wrapFn = fn->wrap();
     switch (op) {
         case SEC: return new Unary(INV, new Unary(COS, wrapFn));
         case CSC: return new Unary(INV, new Unary(SIN, wrapFn));
@@ -144,8 +144,8 @@ const Function* Unary::wrap() const {
     }
 }
 
-const Function* Unary::flatten() const {
-    const Function* flatFn = fn->flatten();
+const AbstractFunction* Unary::flatten() const {
+    const AbstractFunction* flatFn = fn->flatten();
     //std::cout << "Before flattening " << *flatFn << std::endl; //debug
     if (flatFn->getType() == FunctionType::UNARY && flatFn->getOperation() == op) {
         if (op == ABS) {
@@ -160,8 +160,8 @@ const Function* Unary::flatten() const {
     return new Unary(op, flatFn);
 }
 
-const Function* Unary::collapse() const {
-    const Function* simpleFn = fn->collapse();
+const AbstractFunction* Unary::collapse() const {
+    const AbstractFunction* simpleFn = fn->collapse();
 
     if (simpleFn->getType() == FunctionType::CONSTANT) {
 
@@ -215,9 +215,9 @@ OperationType Unary::getOperation() const {
     return op;
 }
 
-std::pair<const Function*, std::vector<const Function*>> Unary::getFns() const {
+std::pair<const AbstractFunction*, std::vector<const AbstractFunction*>> Unary::getFns() const {
 
-    return{fn, std::vector<const Function*>()};
+    return{fn, std::vector<const AbstractFunction*>()};
 }
 
 Unary::~Unary() {

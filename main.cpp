@@ -10,7 +10,7 @@
 #include "Parser.hpp"
 #include "Tests.hpp"
 
-void init_x(const Function* f) {
+void init_x(const AbstractFunction* f) {
     Display *dis;
     int screen;
     Window win;
@@ -162,43 +162,43 @@ void setOptions(){
     std::cout << "Press d when done.\n";
     while(true){
         std::cout << std::boolalpha;
-        std::cout << "0: Prefix: " << Function::opts.prefix << '\n';
-        std::cout << "1: Infix: " << Function::opts.infix << std::endl;
-        std::cout << "2: Simplify: " << Function::opts.simplify << std::endl;
-        std::cout << "3: Evaluate: " << Function::opts.evaluate << std::endl;
+        std::cout << "0: Prefix: " << AbstractFunction::opts.prefix << '\n';
+        std::cout << "1: Infix: " << AbstractFunction::opts.infix << std::endl;
+        std::cout << "2: Simplify: " << AbstractFunction::opts.simplify << std::endl;
+        std::cout << "3: Evaluate: " << AbstractFunction::opts.evaluate << std::endl;
         std::cout << "4: Log base: " ;
-        (Function::opts.base == M_E) ? (std::cout << "e") : (std::cout << Function::opts.base);
+        (AbstractFunction::opts.base == M_E) ? (std::cout << "e") : (std::cout << AbstractFunction::opts.base);
         std::cout << std::endl;
         std::string displayOption;
         getline(std::cin, displayOption);
         if (displayOption == "d"){
             break;
         } else if (displayOption == "0"){
-            Function::opts.prefix = !Function::opts.prefix;
+            AbstractFunction::opts.prefix = !AbstractFunction::opts.prefix;
         } else if (displayOption == "1"){
-            Function::opts.infix = !Function::opts.infix;
+            AbstractFunction::opts.infix = !AbstractFunction::opts.infix;
         } else if (displayOption == "2"){
-            Function::opts.simplify = !Function::opts.simplify;
+            AbstractFunction::opts.simplify = !AbstractFunction::opts.simplify;
         } else if (displayOption == "3"){
-            Function::opts.evaluate = !Function::opts.evaluate;
+            AbstractFunction::opts.evaluate = !AbstractFunction::opts.evaluate;
         } else if (displayOption == "4"){
             std::cout << "Enter the base to change to." << std::endl;
             std::string newLogBase;
             getline(std::cin, newLogBase);
             try {
                 if (newLogBase == "e"){
-                    Function::opts.base = M_E;
+                    AbstractFunction::opts.base = M_E;
                 } else {
                     double newBase = std::stod(newLogBase);
                     if (newBase == 1 || newBase < 0){
                         throw std::invalid_argument("");
                     }
-                    Function::opts.base =  newBase;
+                    AbstractFunction::opts.base =  newBase;
                 }
             } catch (const std::exception& e){
-                std::cout << "Log base entered must be a positive real number not equal to one, or you can enter \"e\". The base's value remains " << Function::opts.base << std::endl;
+                std::cout << "Log base entered must be a positive real number not equal to one, or you can enter \"e\". The base's value remains " << AbstractFunction::opts.base << std::endl;
             }
-            Function::opts.evaluate = !Function::opts.evaluate;
+            AbstractFunction::opts.evaluate = !AbstractFunction::opts.evaluate;
         } else {
             std::cout << "Please enter d, or an integer between 0 and 4 inclusive\n";
         }
@@ -222,7 +222,7 @@ int main(int argc, const char * argv[]) {
             setOptions();
             continue;
         }
-        const Function* f(parse(myExpr));
+        const AbstractFunction* f(parse(myExpr));
         if (f == nullptr)
             continue;
         std::cout << "Function is: " << '\n';
@@ -230,12 +230,12 @@ int main(int argc, const char * argv[]) {
         std::cout << "Derivative is: " << '\n';
         std::cout << *(f->simplify()->derivative()->simplify());
         //init_x(f);
-        if (Function::opts.simplify){
-            const Function* simpleF(f->simplify());
+        if (AbstractFunction::opts.simplify){
+            const AbstractFunction* simpleF(f->simplify());
             std::cout << "Simplified function is: " << '\n';
             std::cout << *simpleF;
         }
-        if (Function::opts.evaluate){
+        if (AbstractFunction::opts.evaluate){
             std::cout << "Enter argument: " << std::endl;
             std::cin >> arg;
             std::cout << f->getName() << "(" << arg << ") = " << f->evaluate(arg) << '\n';

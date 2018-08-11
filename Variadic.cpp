@@ -8,11 +8,11 @@
 
 #include "Variadic.hpp"
 
-Variadic::Variadic(std::string o, std::vector<const Function*> fns) : fns(fns) {
+Variadic::Variadic(std::string o, std::vector<const AbstractFunction*> fns) : fns(fns) {
     op = stringToOperationType[o];
 }
 
-Variadic::Variadic(OperationType o, std::vector<const Function*> fns) : op(o), fns(fns) {
+Variadic::Variadic(OperationType o, std::vector<const AbstractFunction*> fns) : op(o), fns(fns) {
 }
 
 Variadic::Variadic(const Variadic& v) {
@@ -27,7 +27,7 @@ Variadic& Variadic::operator=(Variadic v) {
     return *this;
 }
 
-Function* Variadic::copy() const {
+AbstractFunction* Variadic::copy() const {
     return new Variadic(*this);
 }
 
@@ -61,27 +61,27 @@ double Variadic::evaluate(double arg) const {
     return result;
 }
 
-Function* Variadic::substitute(const Function* subFn) const {
-    std::vector<const Function*> substitutedFns;
+AbstractFunction* Variadic::substitute(const AbstractFunction* subFn) const {
+    std::vector<const AbstractFunction*> substitutedFns;
     for (auto& fn : fns) {
         substitutedFns.emplace_back(fn->substitute(subFn));
     }
     return new Variadic(op, substitutedFns);
 }
 
-Function* Variadic::derivative() const {
-    std::vector<const Function*> derivedFns;
+AbstractFunction* Variadic::derivative() const {
+    std::vector<const AbstractFunction*> derivedFns;
     // if op is ^
     if (op == POWER) {
         //must have exactly two fns, f^g
-        Function* f = fns[0]->copy();
-        Function* g = fns[1]->copy();
+        AbstractFunction* f = fns[0]->copy();
+        AbstractFunction* g = fns[1]->copy();
         // derivative is f^g * (g*(1/f)*f' + g' ln |f|
-        Function* f_prime = f->derivative();
-        Function* g_prime = g->derivative();
-        Function* f_inv = new Unary(INV, f->copy());
-        Function* abs_f = new Unary(ABS, f->copy());
-        Function* ln_abs_f = new Unary(LN, abs_f);
+        AbstractFunction* f_prime = f->derivative();
+        AbstractFunction* g_prime = g->derivative();
+        AbstractFunction* f_inv = new Unary(INV, f->copy());
+        AbstractFunction* abs_f = new Unary(ABS, f->copy());
+        AbstractFunction* ln_abs_f = new Unary(LN, abs_f);
         return new Variadic(TIMES, 
                 {new Variadic(POWER, {f, g}), 
                 new Variadic(PLUS, 
@@ -91,9 +91,9 @@ Function* Variadic::derivative() const {
     // else OP is + or *
     int i = 0;
     for (auto& fn : fns) {
-        Function* derivedInner = fn->derivative();
+        AbstractFunction* derivedInner = fn->derivative();
         if (op == TIMES) {
-            std::vector<const Function*> restProduct = fns;
+            std::vector<const AbstractFunction*> restProduct = fns;
             restProduct.erase(restProduct.begin() + i);
             restProduct.emplace_back(derivedInner);
             derivedFns.emplace_back(new Variadic(TIMES, restProduct));
@@ -105,10 +105,10 @@ Function* Variadic::derivative() const {
     return new Variadic(PLUS, derivedFns);
 }
 
-const Function* Variadic::wrap() const {
+const AbstractFunction* Variadic::wrap() const {
     //std::cout << "Before wrapping: " << *this << " end\n"; DEBUG
     OperationType wrapOp = op;
-    std::vector<const Function*> wrapFns;
+    std::vector<const AbstractFunction*> wrapFns;
     switch (op) {
         case MINUS:
         {
@@ -132,7 +132,7 @@ const Function* Variadic::wrap() const {
         {
             if (fns.size() > 2) {
                 wrapFns.emplace_back(fns[0]->wrap());
-                std::vector<const Function*> restFns(fns.begin() + 1, fns.end());
+                std::vector<const AbstractFunction*> restFns(fns.begin() + 1, fns.end());
                 wrapFns.emplace_back((new Variadic(POWER, restFns))->wrap());
                 break;
             }
@@ -148,10 +148,10 @@ const Function* Variadic::wrap() const {
     return new Variadic(wrapOp, wrapFns);
 }
 
-const Function* Variadic::flatten() const {
-    std::vector<const Function*> flatFns;
+const AbstractFunction* Variadic::flatten() const {
+    std::vector<const AbstractFunction*> flatFns;
     for (const auto& fn : fns) {
-        const Function* flatFn = fn->flatten();
+        const AbstractFunction* flatFn = fn->flatten();
         //std::cout << "Flattened token is " << *flatFn << std::endl; //debug
         if (flatFn->getType() == FunctionType::VARIADIC &&
                 flatFn->getOperation() == op && op != POWER) { //don't flatten power towers
@@ -165,16 +165,16 @@ const Function* Variadic::flatten() const {
     return new Variadic(op, flatFns);
 }
 
-const Function* Variadic::collapse() const {
+const AbstractFunction* Variadic::collapse() const {
     //std::cout << "Before collapsing: " << *this << " end\n"; DEBUG
-    std::vector<const Function*> collapseFns;
+    std::vector<const AbstractFunction*> collapseFns;
     std::transform(fns.begin(), fns.end(), std::back_inserter(collapseFns),
-            [](const Function * f) -> const Function*{
+            [](const AbstractFunction * f) -> const AbstractFunction*{
                 return f->collapse();
             });
 
     if (op == POWER) {
-        Function* powerFn = new Variadic(op, collapseFns);
+        AbstractFunction* powerFn = new Variadic(op, collapseFns);
         if (collapseFns[0]->getType() == CONSTANT && collapseFns[1]->getType() == CONSTANT) {
             double result = powerFn->evaluate(0); //argument doesn't matter
             delete powerFn;
@@ -184,11 +184,11 @@ const Function* Variadic::collapse() const {
     }
     //sort can only be done for + and *, not power:
     std::stable_sort(collapseFns.begin(), collapseFns.end(),
-            [](const Function* a, const Function * b) -> bool{
+            [](const AbstractFunction* a, const AbstractFunction * b) -> bool{
                 return a->getType() < b->getType();
             });
     //std::cout << "Before collapsing 2: " << *(new Variadic(op, collapseFns)) << " end\n"; //DEBUG
-    std::vector<const Function*> simpleFns;
+    std::vector<const AbstractFunction*> simpleFns;
     auto fn = collapseFns.begin();
     for (; fn != collapseFns.end(); fn++) {
         if ((*fn)->getType() == FunctionType::CONSTANT) {
@@ -198,7 +198,7 @@ const Function* Variadic::collapse() const {
         }
     }
     if (fn != collapseFns.end()) {
-        std::vector<const Function*> constFns(fn, collapseFns.end());
+        std::vector<const AbstractFunction*> constFns(fn, collapseFns.end());
         double result = (new Variadic(op, constFns))->evaluate(0); //argument to evaluate doesn't matter
         if ((op == PLUS && result != 0) || (op == TIMES && result != 1)) {
             simpleFns.emplace_back(new Constant(result));
@@ -263,7 +263,7 @@ OperationType Variadic::getOperation() const {
     return op;
 }
 
-std::pair<const Function*, std::vector<const Function*>> Variadic::getFns() const {
+std::pair<const AbstractFunction*, std::vector<const AbstractFunction*>> Variadic::getFns() const {
     return {nullptr, fns};
 }
 

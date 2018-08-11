@@ -22,16 +22,16 @@
 //  and also does bracket symbols and absolute value symbols error checking
 
 //returns pointer to function constructed from expr, nullptr if there is an error
-const Function* parse(std::string expr);
+const AbstractFunction* parse(std::string expr);
 
 // if error during parsing, returns {"", false}, otherwise returns
 // the absolute value substituted string with true as second.
 std::pair<std::string, bool> absoluteValueSubstitution(std::string expr);
 
 // mutually recursive with tokenize; parses all expressions
-Function* parseToken(std::string expr);
+AbstractFunction* parseToken(std::string expr);
 
 // mutually recursive with parseToken; splits variadic expressions and calls parseToken on each
-Function* tokenize(std::string expr, char op);
+AbstractFunction* tokenize(std::string expr, char op);
 
 #endif /* Parser_hpp */

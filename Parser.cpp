@@ -12,9 +12,9 @@
 const std::vector<char> ops{'+', '-', '*', '/', '^'};
 const std::vector<std::string> unaryFns{"asinh", "acosh", "atanh", "asech", "acsch", "acoth", "asin", "acos", "atan", "asec", "acsc", "acot", "sinh", "cosh", "tanh", "sech", "csch", "coth", "sin", "cos", "tan", "sec", "csc", "cot", "log", "ln"};
 
-const Function* parse(std::string expr) {
+const AbstractFunction* parse(std::string expr) {
     //initialize operation maps:
-    Function::initalizeOperationTypeMaps();
+    AbstractFunction::initalizeOperationTypeMaps();
 
     //remove spaces:
     bool hasName = false;
@@ -30,7 +30,7 @@ const Function* parse(std::string expr) {
         expr = expr.substr(equalSignPos + 1);
         hasName = true;
     } else {
-        functionName = "f{" + std::to_string(Function::userFunctions.size()) + "}";
+        functionName = "f{" + std::to_string(AbstractFunction::userFunctions.size()) + "}";
     }
     std::pair < std::string, bool> exprValid = absoluteValueSubstitution(expr);
     if (!exprValid.second) {
@@ -49,10 +49,10 @@ const Function* parse(std::string expr) {
         i++;
     }
     // std::cout << "Cleaned and now: " << expr << '\n'; //debug
-    Function* parsedFunction = parseToken(expr);
+    AbstractFunction* parsedFunction = parseToken(expr);
     parsedFunction->setName(functionName);
     // std::cout << "Function is " << *parsedFunction << std::endl; //debug
-    Function::userFunctions.insert({functionName, parsedFunction});
+    AbstractFunction::userFunctions.insert({functionName, parsedFunction});
     return parsedFunction;
 }
 
@@ -120,17 +120,17 @@ std::pair<std::string, bool> absoluteValueSubstitution(std::string expr) {
     return {expr, true};
 }
 
-Function* parseToken(std::string expr) {
+AbstractFunction* parseToken(std::string expr) {
     //   std::cout << "Here 0 " << expr << '\n'; //debug
     int length = (int) expr.size();
-    Function* f = nullptr;
+    AbstractFunction* f = nullptr;
     if (length == 1) {
         if (expr == "x") {
             f = new Argument;
             return f;
         }
     }
-    std::vector<Function*> fns;
+    std::vector<AbstractFunction*> fns;
 
     //variadic operations:
     for (char op : ops) {
@@ -158,7 +158,7 @@ Function* parseToken(std::string expr) {
     }
 
     //user defined functions
-    for (auto userFnIter = Function::userFunctions.rbegin(); userFnIter != Function::userFunctions.rend(); ++userFnIter) {
+    for (auto userFnIter = AbstractFunction::userFunctions.rbegin(); userFnIter != AbstractFunction::userFunctions.rend(); ++userFnIter) {
         //return must be first character, position 0
         if (expr.find(userFnIter->first) == 0) {
             int nameSize = (int) userFnIter->first.size();
@@ -181,16 +181,16 @@ Function* parseToken(std::string expr) {
     return f;
 }
 
-Function* tokenize(std::string expr, char op) {
+AbstractFunction* tokenize(std::string expr, char op) {
     int length = (int) expr.size();
-    Function* f = nullptr;
+    AbstractFunction* f = nullptr;
     int brackets = 0;
     int abs = 0;
     int substringStart = 0;
     int substringLength = 0;
     std::string operationString;
     operationString += op;
-    std::vector<const Function*> fns;
+    std::vector<const AbstractFunction*> fns;
     for (int i = 0; i < length; i++) {
         ++substringLength;
         if (expr[i] == '(')

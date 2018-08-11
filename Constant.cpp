@@ -20,7 +20,7 @@ Constant& Constant::operator=(Constant c) {
     return *this;
 }
 
-Function* Constant::copy() const {
+AbstractFunction* Constant::copy() const {
     return new Constant(*this);
 }
 
@@ -28,11 +28,11 @@ double Constant::evaluate(double arg) const {
     return val;
 }
 
-Function* Constant::substitute(const Function* subFn) const {
+AbstractFunction* Constant::substitute(const AbstractFunction* subFn) const {
     return new Constant(*this);
 }
 
-Function* Constant::derivative() const {
+AbstractFunction* Constant::derivative() const {
     return new Constant(0);
 }
 
@@ -48,7 +48,7 @@ std::string Constant::getPrefixString() const {
     return stream.str();
 }
 
-Function* Constant::collapse() const {
+AbstractFunction* Constant::collapse() const {
     return new Constant(val);
 }
 
