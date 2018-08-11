@@ -9,32 +9,29 @@
 
 #include "AbstractFunction.hpp"
 #include "Constant.hpp"
+#include "Function.hpp"
 
-class Unary : public AbstractFunction {
+class Unary : public AbstractFunction {    
     OperationType op;
-    const AbstractFunction* fn;
+    const Function fn;
 
     virtual AbstractFunction* copy() const;
-    virtual const AbstractFunction* wrap() const;
-    virtual const AbstractFunction* flatten() const;
-    virtual const AbstractFunction* collapse() const;
+    virtual const Function wrap() const;
+    virtual const Function flatten() const;
+    virtual const Function collapse() const;
     virtual std::string getPrefixString() const;
     virtual std::string getInfixString() const;
 
 public:
-    Unary(std::string o, const AbstractFunction* fn);
-    Unary(OperationType o, const AbstractFunction* fn);
-    Unary(const Unary& u);
-
-    Unary& operator=(Unary u);
+    Unary(std::string o, const Function fn);
+    Unary(OperationType o, const Function fn);
 
     virtual double evaluate(double arg) const;
-    virtual AbstractFunction* substitute(const AbstractFunction* subFn) const;
-    virtual AbstractFunction* derivative() const;
+    virtual Function substitute(const Function subFn) const;
+    virtual Function derivative() const;
     virtual FunctionType getType() const;
     virtual OperationType getOperation() const;
-    virtual std::pair<const AbstractFunction*, std::vector<const AbstractFunction*>> getFns() const;
-    ~Unary();
+    virtual std::pair<const Function, std::vector<Function>> getFns() const;
 };
 
 #endif /* Unary_hpp */

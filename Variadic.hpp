@@ -12,32 +12,29 @@
 #include "AbstractFunction.hpp"
 #include "Unary.hpp"
 #include "Constant.hpp"
+#include "Function.hpp"
 
-class Variadic : public AbstractFunction {
+class Variadic : public AbstractFunction {    
     OperationType op;
-    std::vector<const AbstractFunction*> fns;
+    std::vector<Function> fns;
 
     virtual AbstractFunction* copy() const;
-    virtual const AbstractFunction* wrap() const;
-    virtual const AbstractFunction* flatten() const;
-    virtual const AbstractFunction* collapse() const;
+    virtual const Function wrap() const;
+    virtual const Function flatten() const;
+    virtual const Function collapse() const;
     virtual std::string getPrefixString() const;
     virtual std::string getInfixString() const;
 
 public:
-    Variadic(std::string o, std::vector<const AbstractFunction*> fns);
-    Variadic(OperationType o, std::vector<const AbstractFunction*> fns);
-    Variadic(const Variadic& v);
-
-    Variadic& operator=(Variadic v);
+    Variadic(std::string o, std::vector<Function> fns);
+    Variadic(OperationType o, std::vector<Function> fns);
 
     virtual double evaluate(double arg) const;
-    virtual AbstractFunction* substitute(const AbstractFunction* subFn) const;
-    virtual AbstractFunction* derivative() const;
+    virtual Function substitute(const Function subFn) const;
+    virtual Function derivative() const;
     virtual FunctionType getType() const;
     virtual OperationType getOperation() const;
-    virtual std::pair<const AbstractFunction*, std::vector<const AbstractFunction*>> getFns() const;
-    ~Variadic();
+    virtual std::pair<const Function, std::vector<Function>> getFns() const;
 };
 
 

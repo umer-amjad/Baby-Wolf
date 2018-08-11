@@ -5,6 +5,7 @@
 //
 
 #include "Constant.hpp"
+#include "Function.hpp"
 
 #include <sstream>
 
@@ -21,19 +22,19 @@ Constant& Constant::operator=(Constant c) {
 }
 
 AbstractFunction* Constant::copy() const {
-    return new Constant(*this);
+    return new Constant(val);
 }
 
 double Constant::evaluate(double arg) const {
     return val;
 }
 
-AbstractFunction* Constant::substitute(const AbstractFunction* subFn) const {
-    return new Constant(*this);
+Function Constant::substitute(const Function subFn) const {
+    return Function(val);
 }
 
-AbstractFunction* Constant::derivative() const {
-    return new Constant(0);
+Function Constant::derivative() const {
+    return Function(0.0);
 }
 
 std::string Constant::getPrefixString() const {
@@ -48,8 +49,16 @@ std::string Constant::getPrefixString() const {
     return stream.str();
 }
 
-AbstractFunction* Constant::collapse() const {
-    return new Constant(val);
+const Function Constant::wrap() const {
+    return Function(val);
+}
+
+const Function Constant::flatten() const {
+    return Function(val);
+}
+
+const Function Constant::collapse() const {
+    return Function(val);
 }
 
 std::string Constant::getInfixString() const {

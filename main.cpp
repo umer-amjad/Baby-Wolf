@@ -10,7 +10,7 @@
 #include "Parser.hpp"
 #include "Tests.hpp"
 
-void init_x(const AbstractFunction* f) {
+void init_x(const Function f) {
     Display *dis;
     int screen;
     Window win;
@@ -110,7 +110,7 @@ void init_x(const AbstractFunction* f) {
     for (int x_coord = 0; x_coord < width + pixel_separation; x_coord+=pixel_separation){
         double x_val = (x_coord-x_zero)/x_scale;
         //std::cout << "X val is " << x_val << std::endl;
-        double y_val = f->evaluate(x_val);
+        double y_val = f.evaluate(x_val);
         //std::cout << "Y val is " << y_val << std::endl;
         int y_coord = round(-(y_scale*y_val)+y_zero);
         points.push_back({(short)x_coord, (short)y_coord});
@@ -222,23 +222,23 @@ int main(int argc, const char * argv[]) {
             setOptions();
             continue;
         }
-        const AbstractFunction* f(parse(myExpr));
-        if (f == nullptr)
+        const Function f(parse(myExpr));
+        if (f.isNull())
             continue;
         std::cout << "Function is: " << '\n';
-        std::cout << *f;
+        std::cout << f;
         std::cout << "Derivative is: " << '\n';
-        std::cout << *(f->simplify()->derivative()->simplify());
+        std::cout << f.simplify().derivative().simplify();
         //init_x(f);
         if (AbstractFunction::opts.simplify){
-            const AbstractFunction* simpleF(f->simplify());
+            const Function simpleF = f.simplify();
             std::cout << "Simplified function is: " << '\n';
-            std::cout << *simpleF;
+            std::cout << simpleF;
         }
         if (AbstractFunction::opts.evaluate){
             std::cout << "Enter argument: " << std::endl;
             std::cin >> arg;
-            std::cout << f->getName() << "(" << arg << ") = " << f->evaluate(arg) << '\n';
+            std::cout << f.getName() << "(" << arg << ") = " << f.evaluate(arg) << '\n';
             std::cin.ignore();
         }
     }

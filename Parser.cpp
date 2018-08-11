@@ -12,7 +12,7 @@
 const std::vector<char> ops{'+', '-', '*', '/', '^'};
 const std::vector<std::string> unaryFns{"asinh", "acosh", "atanh", "asech", "acsch", "acoth", "asin", "acos", "atan", "asec", "acsc", "acot", "sinh", "cosh", "tanh", "sech", "csch", "coth", "sin", "cos", "tan", "sec", "csc", "cot", "log", "ln"};
 
-const AbstractFunction* parse(std::string expr) {
+const Function parse(std::string expr) {
     //initialize operation maps:
     AbstractFunction::initalizeOperationTypeMaps();
 
@@ -49,8 +49,8 @@ const AbstractFunction* parse(std::string expr) {
         i++;
     }
     // std::cout << "Cleaned and now: " << expr << '\n'; //debug
-    AbstractFunction* parsedFunction = parseToken(expr);
-    parsedFunction->setName(functionName);
+    Function parsedFunction = parseToken(expr);
+    parsedFunction.setName(functionName);
     // std::cout << "Function is " << *parsedFunction << std::endl; //debug
     AbstractFunction::userFunctions.insert({functionName, parsedFunction});
     return parsedFunction;
@@ -120,40 +120,37 @@ std::pair<std::string, bool> absoluteValueSubstitution(std::string expr) {
     return {expr, true};
 }
 
-AbstractFunction* parseToken(std::string expr) {
-    //   std::cout << "Here 0 " << expr << '\n'; //debug
+Function parseToken(std::string expr) {
     int length = (int) expr.size();
-    AbstractFunction* f = nullptr;
     if (length == 1) {
         if (expr == "x") {
-            f = new Argument;
-            return f;
+            return Function();
         }
     }
-    std::vector<AbstractFunction*> fns;
-
+    std::vector<Function> fns;
+    
     //variadic operations:
     for (char op : ops) {
-        f = tokenize(expr, op);
-        if (f != nullptr)
-            return f;
+        auto f = tokenize(expr, op);
+        if (f.second) //valid 
+            return f.first;
     }
-
+    
     // negatives
     if (expr[0] == '-') {
-        return new Unary(NEG, parseToken(expr.substr(1)));
+        return Function(NEG, parseToken(expr.substr(1)));
     }
-
+    
     //absolute value
     if (expr[0] == '<') {
-        return new Unary(ABS, parseToken(expr.substr(1, length - 2)));
+        return Function(ABS, parseToken(expr.substr(1, length - 2)));
     }
 
     //trig functions, check longer ones before shorter ones
     for (auto trigFn : unaryFns) {
         int trigFnLength = (int) trigFn.length();
         if (length >= trigFnLength && expr.substr(0, trigFnLength) == trigFn) {
-            return new Unary(trigFn, parseToken(expr.substr(trigFnLength)));
+            return Function(AbstractFunction::stringToOperationType[trigFn], parseToken(expr.substr(trigFnLength)));
         }
     }
 
@@ -162,7 +159,7 @@ AbstractFunction* parseToken(std::string expr) {
         //return must be first character, position 0
         if (expr.find(userFnIter->first) == 0) {
             int nameSize = (int) userFnIter->first.size();
-            return userFnIter->second->substitute(parseToken(expr.substr(nameSize)));
+            return userFnIter->second.substitute(parseToken(expr.substr(nameSize)));
         }
     }
 
@@ -171,26 +168,23 @@ AbstractFunction* parseToken(std::string expr) {
         return parseToken(expr.substr(1, length - 2));
     }
     if (expr == "pi") {
-        return new Constant(M_PI);
+        return Function(M_PI);
     }
     if (expr == "e") {
-        return new Constant(M_E);
+        return Function(M_E);
     }
-    //std::cout << "Here " << expr << '\n'; //debug
-    f = new Constant(stod(expr));
-    return f;
+    return Function(stod(expr));
 }
 
-AbstractFunction* tokenize(std::string expr, char op) {
+std::pair<Function, bool> tokenize(std::string expr, char op) {
     int length = (int) expr.size();
-    AbstractFunction* f = nullptr;
     int brackets = 0;
     int abs = 0;
     int substringStart = 0;
     int substringLength = 0;
     std::string operationString;
     operationString += op;
-    std::vector<const AbstractFunction*> fns;
+    std::vector<Function> fns;
     for (int i = 0; i < length; i++) {
         ++substringLength;
         if (expr[i] == '(')
@@ -208,11 +202,11 @@ AbstractFunction* tokenize(std::string expr, char op) {
             substringStart = i + 1;
             substringLength = 0;
         }
-    }
+    }    
     if (substringStart > 0) {
         fns.emplace_back(parseToken(expr.substr(substringStart)));
-        f = new Variadic(operationString, fns);
+        return {Function(AbstractFunction::stringToOperationType[operationString], fns), true};
     }
-    return f;
+    return {Function(), false};
 }
 

@@ -5,11 +5,12 @@
 //
 
 #include "AbstractFunction.hpp"
+#include "Function.hpp"
 
 #include <iostream>
 
 Options AbstractFunction::opts{true, false, false, true};
-std::map<std::string, const AbstractFunction*> AbstractFunction::userFunctions{};
+std::map<std::string, const Function> AbstractFunction::userFunctions{};
 
 std::map<OperationType, std::string> AbstractFunction::operationToString;
 std::map<std::string, OperationType> AbstractFunction::stringToOperationType;
@@ -97,53 +98,16 @@ void AbstractFunction::initalizeOperationTypeMaps(){
     }
 }
 
-const AbstractFunction* AbstractFunction::wrap() const {
-    return this;
-}
-
-const AbstractFunction* AbstractFunction::flatten() const {
-    return this;
-}
-
 OperationType AbstractFunction::getOperation() const {
     return INVALID;
 }
 
-const AbstractFunction* AbstractFunction::simplify() const {
-    const AbstractFunction* simplified = this->wrap()->flatten()->collapse()->flatten();
+const Function AbstractFunction::simplify() const {
+    const Function simplified = this->wrap().flatten().collapse().flatten();
     //userFunctions.push_back(simplified);
     return simplified;
 }
 
-std::pair<const AbstractFunction*, std::vector<const AbstractFunction*>> AbstractFunction::getFns() const {
-    return {nullptr, std::vector<const AbstractFunction*>()};
-}
-
-std::string AbstractFunction::getName() const {
-    return functionName;
-}
-
-bool AbstractFunction::setName(std::string name){
-    this->functionName = name;
-    auto userFnIter = userFunctions.find(name);
-    if (userFnIter != userFunctions.end()){
-        userFunctions.erase(userFnIter);
-        return true;
-    }
-    return false;
-}
-
-
-std::ostream& operator<<(std::ostream& o, const AbstractFunction& fn){
-    std::string name = fn.functionName;
-    if (name == ""){
-        name = "unnamed";
-    }
-    if (AbstractFunction::opts.prefix){
-        o << "(define (" << name << " x) " << fn.getPrefixString() << ")\n";
-    }
-    if (AbstractFunction::opts.infix){
-        o << name << "(x) = " << fn.getInfixString() << '\n';
-    }
-    return o;
+std::pair<const Function, std::vector<Function>> AbstractFunction::getFns() const {
+    return {nullptr, std::vector< Function>()};
 }

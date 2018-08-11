@@ -21,6 +21,8 @@ enum FunctionType {
     VARIADIC = 0, UNARY, ARGUMENT, CONSTANT
 };
 
+class Function;
+
 enum OperationType {
     PLUS = 0, MINUS, TIMES, DIVIDE, POWER, //5
     NEG, INV, ABS, //3
@@ -46,16 +48,14 @@ class AbstractFunction {
     friend class Argument;
     friend class Function;
 
-    std::string functionName;
-
     //wraps use of "-" and "/" variadics with "neg" and "inv" unaries - not new-ly allocated except for new unaries
-    virtual const AbstractFunction* wrap() const;
+    virtual const Function wrap() const = 0;
 
     //flattens syntax tree for operations + and * - not new-ly allocated
-    virtual const AbstractFunction* flatten() const;
+    virtual const Function flatten() const = 0;
 
     //"collapses" tree for arithmetic operations where possible - NOTE: returns new-ly allocated function
-    virtual const AbstractFunction* collapse() const = 0;
+    virtual const Function collapse() const = 0;
 
     //return function string in getPrefixString notation
     virtual std::string getPrefixString() const = 0;
@@ -70,7 +70,7 @@ class AbstractFunction {
     virtual OperationType getOperation() const;
 
     //get functions (for variadic and unary types only), default <nullptr, empty vector>:
-    virtual std::pair<const AbstractFunction*, std::vector<const AbstractFunction*>> getFns() const;
+    virtual std::pair<const Function, std::vector<Function>> getFns() const;
 
     virtual AbstractFunction* copy() const = 0;
 
@@ -79,7 +79,7 @@ public:
     static Options opts;
 
     //functions defined by the user already
-    static std::map<std::string, const AbstractFunction*> userFunctions;
+    static std::map<std::string, const Function> userFunctions;
 
     //maps to and from internal operation to string
     static std::map<OperationType, std::string> operationToString;
@@ -92,25 +92,15 @@ public:
     virtual double evaluate(double arg) const = 0;
 
     //return this function but subtitute x with fn
-    virtual AbstractFunction* substitute(const AbstractFunction* subFn) const = 0;
+    virtual Function substitute(const Function subFn) const = 0;
 
     //returns derivative of function
-    virtual AbstractFunction* derivative() const = 0;
+    virtual Function derivative() const = 0;
 
     //returns arithmetically simplified function - NOTE: returns new-ly allocated function
-    const AbstractFunction* simplify() const;
-
-    //returns function name
-    std::string getName() const;
-
-    //returns true if existing function with that name already exists
-    bool setName(std::string name);
-
-    //overload ostream operator to return string
-    friend std::ostream& operator<<(std::ostream& o, const AbstractFunction& fn);
+    const Function simplify() const;
 
     //virtual destructor
-
     virtual ~AbstractFunction() {
     };
 };

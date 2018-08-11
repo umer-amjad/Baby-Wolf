@@ -6,25 +6,34 @@
 
 #include "Argument.hpp"
 #include "Constant.hpp"
+#include "Function.hpp"
 
 AbstractFunction* Argument::copy() const {
-    return new Argument;
+    return new Argument(); //new Arg
 }
 
 double Argument::evaluate(double arg) const {
     return arg;
 }
 
-AbstractFunction* Argument::substitute(const AbstractFunction* subFn) const {
-    return subFn->copy();
+Function Argument::substitute(const Function subFn) const {
+    return subFn; //return a copy of subFn
 }
 
-AbstractFunction* Argument::derivative() const {
-    return new Constant(1);
+Function Argument::derivative() const {
+    return Function(1);
 }
 
-AbstractFunction* Argument::collapse() const {
-    return new Argument;
+const Function Argument::wrap() const {
+    return Function(); //new Argument
+}
+
+const Function Argument::flatten() const {
+    return Function(); //new Argument
+}
+
+const Function Argument::collapse() const {
+    return Function(); //new Argument
 }
 
 std::string Argument::getPrefixString() const {
