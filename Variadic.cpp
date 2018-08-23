@@ -183,7 +183,7 @@ const Function Variadic::collapse() const {
     }
     if (fn != collapseFns.end()) {
         std::vector<Function> constFns(fn, collapseFns.end());
-        double result = (Function(op, constFns)).evaluate(0); //argument to evaluate doesn't matter
+        double result = Function(op, constFns).evaluate(0); //argument to evaluate doesn't matter
         if ((op == PLUS && result != 0) || (op == TIMES && result != 1)) {
             simpleFns.emplace_back(Function(result));
         }

@@ -64,9 +64,9 @@ Function Unary::derivative() const {
     // add f' to the chain rule
     Function fp = fn.derivative();
     switch (op) {
-        case LN: return Function(TIMES, {Function(INV, fn), fp}); //natural logarithm
+        case LN: return Function(TIMES, {{INV, fn}, fp}); //natural logarithm
         case NEG: return Function(NEG, fp);
-        case INV: return Function(TIMES, {Function(NEG, Function(POWER,{fn, Function(2)})), fp});
+        case INV: return Function(TIMES, {Function(NEG, Function(INV, {POWER,{fn, {2}}})), fp});
         case ABS: return fp; // for now, if g = |f|, g' = f'
         case LOG: return Function(TIMES, {Function(1 / log(opts.base)), Function(INV, fn)});
         case SIN: return Function(TIMES, {Function(COS, fn), fp});
