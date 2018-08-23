@@ -69,3 +69,7 @@ FunctionType Constant::getType() const {
     return FunctionType::CONSTANT;
 }
 
+double Constant::getValue() const {
+    return val;
+}
+

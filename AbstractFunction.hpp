@@ -65,6 +65,9 @@ class AbstractFunction {
 
     //return function type
     virtual FunctionType getType() const = 0;
+    
+    //get value (for Constant type only), default NaN
+    virtual double getValue() const;
 
     //get operation (for variadic and unary types only), default empty:
     virtual OperationType getOperation() const;

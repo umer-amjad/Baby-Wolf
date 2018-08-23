@@ -98,6 +98,10 @@ void AbstractFunction::initalizeOperationTypeMaps(){
     }
 }
 
+double AbstractFunction::getValue() const {
+    return NAN;
+}
+
 OperationType AbstractFunction::getOperation() const {
     return INVALID;
 }

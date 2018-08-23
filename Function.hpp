@@ -46,6 +46,10 @@ class Function : public AbstractFunction {
         return f->getType();
     }
     
+    virtual double getValue() const {
+        return f->getValue();
+    }
+    
     virtual OperationType getOperation() const {
         return f->getOperation();
     }

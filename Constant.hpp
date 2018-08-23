@@ -29,6 +29,7 @@ public:
     virtual std::string getPrefixString() const;
     virtual std::string getInfixString() const;
     virtual FunctionType getType() const;
+    virtual double getValue() const;
 };
 
 #endif /* Constant_hpp */
