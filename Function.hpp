@@ -18,43 +18,43 @@ class Function : public AbstractFunction {
     AbstractFunction* f;
     std::string name;
     
-    virtual AbstractFunction* copy() const {
+    AbstractFunction* copy() const override {
         return f->copy();
     }
     
-    virtual const Function wrap() const {
+    const Function wrap() const override {
         return f->wrap();
     }
     
-    virtual const Function flatten() const {
+    const Function flatten() const override {
         return f->flatten();
     }
     
-    virtual const Function collapse() const {
+    const Function collapse() const override {
         return f->collapse();
     }
     
-    virtual std::string getPrefixString() const {
+    std::string getPrefixString() const override {
         return f->getPrefixString();
     }
     
-    virtual std::string getInfixString() const {
+    std::string getInfixString() const override {
         return f->getInfixString();
     }
     
-    virtual FunctionType getType() const {
+    FunctionType getType() const override {
         return f->getType();
     }
     
-    virtual double getValue() const {
+    double getValue() const override {
         return f->getValue();
     }
     
-    virtual OperationType getOperation() const {
+    OperationType getOperation() const override {
         return f->getOperation();
     }
     
-    virtual std::pair<const Function, std::vector<Function>> getFns() const {
+    std::pair<const Function, std::vector<Function>> getFns() const override {
         return f->getFns();
     }
     
@@ -91,15 +91,15 @@ public:
     }
     
     
-    virtual double evaluate(double arg) const {
+    double evaluate(double arg) const override {
         return f->evaluate(arg);
     }
     
-    virtual Function substitute(const Function subFn) const {
+    Function substitute(const Function subFn) const override {
         return f->substitute(subFn);
     }
     
-    virtual Function derivative() const {
+    Function derivative() const override {
         return f->derivative();
     }
     

@@ -12,10 +12,10 @@
 class Constant : public AbstractFunction {
     double val;
 
-    virtual const Function wrap() const;
-    virtual const Function flatten() const;
-    virtual const Function collapse() const;
-    virtual AbstractFunction* copy() const;
+    const Function wrap() const override;
+    const Function flatten() const override;
+    const Function collapse() const override;
+    AbstractFunction* copy() const override;
 
 public:
     Constant(double val);
@@ -23,13 +23,13 @@ public:
 
     Constant& operator=(Constant c);
 
-    virtual double evaluate(double arg) const;
-    virtual Function substitute(const Function subFn) const;
-    virtual Function derivative() const;
-    virtual std::string getPrefixString() const;
-    virtual std::string getInfixString() const;
-    virtual FunctionType getType() const;
-    virtual double getValue() const;
+    double evaluate(double arg) const override;
+    Function substitute(const Function subFn) const override;
+    Function derivative() const override;
+    std::string getPrefixString() const override;
+    std::string getInfixString() const override;
+    FunctionType getType() const override;
+    double getValue() const override;
 };
 
 #endif /* Constant_hpp */
