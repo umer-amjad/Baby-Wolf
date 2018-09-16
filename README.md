@@ -19,12 +19,15 @@ Currently all interaction (I/O) with the program is done in a command-line inter
 Graphing is being implemented as another display option. This is done currently using Xlib. Improvements are still needed for graph labelling. Here are some examples of Baby Wolf graphing functions:
 
 `cos(x)`:
+
 ![](Samples/cos(x).png)
 
 `tan(x)`:
+
 ![](Samples/tan(x).png)
 
 `sin(x^2)+x/5`:
+
 ![](Samples/sin(x2)plusxover5.png)
 
 
