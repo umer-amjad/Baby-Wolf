@@ -16,7 +16,19 @@ The evaluator can evaluate expressions that contain the above operations or func
 Currently all interaction (I/O) with the program is done in a command-line interface. The displayer outputs the parsed function to the CLI. Currently, there are two options for display - infix and prefix. "Infix" displays the result with the arithmetic operations, +, *, -, /, and ^, between their arguments, as is commonly written. The prefix option prints in Polish notation, representing the s-expression formed by the parsing of the function.   
 
 #### Graphing ####
-Graphing is being implemented as another display option. This is done currently using Xlib. Here are some examples of Baby Wolf graphing functions:
+Graphing is being implemented as another display option. This is done currently using Xlib. Improvements are still needed for graph labelling. Here are some examples of Baby Wolf graphing functions:
+
+`cos(x)`:
+
+![](Samples/cos(x).png)
+
+`tan(x)`:
+
+![](Samples/tan(x).png)
+
+`sin(x^2)+x/5`:
+
+![](Samples/sin(x2)plusxover5.png)
 
 
 #### Simplifying ####
