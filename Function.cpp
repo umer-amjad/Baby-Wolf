@@ -4,6 +4,8 @@
 //
 //
 
+#include <algorithm>
+
 #include "Function.hpp"
 #include "Argument.hpp"
 #include "Constant.hpp"
@@ -47,4 +49,30 @@ std::ostream& operator<<(std::ostream& o, const Function& fn){
         o << name << "(x) = " << fn.getInfixString() << '\n';
     }
     return o;
+}
+
+//compare simplified functions
+bool operator<(const Function& f1, const Function& f2){
+    if (f1.getType() != f2.getType()) {
+        return f1.getType() < f2.getType();
+    } else if (f1.getType() == FunctionType::CONSTANT) {
+        return f1.getValue() < f2.getValue();
+    } else if (f1.getType() == FunctionType::ARGUMENT) {
+        return false; //arguments are always equal
+    } else if (f1.getType() == FunctionType::UNARY) {
+        if (f1.getOperation() == f2.getOperation()) {
+            return f1.getFns().first < f2.getFns().first;
+        } else {
+            return f1.getOperation() < f2.getOperation();
+        }
+    } else if (f1.getType() == FunctionType::VARIADIC) {
+        if (f1.getOperation() == f2.getOperation()) {
+            //lexicographical comparison
+            const std::vector<Function>& fns1 = f1.getFns().second;
+            const std::vector<Function>& fns2 = f2.getFns().second;
+            return std::lexicographical_compare(fns1.begin(), fns1.end(), fns2.begin(), fns2.end());
+        } else {
+            return f1.getOperation() < f2.getOperation();
+        }        
+    }
 }

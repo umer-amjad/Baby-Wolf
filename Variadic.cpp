@@ -168,10 +168,7 @@ const Function Variadic::collapse() const {
         return powerFn;
     }
     //sort can only be done for + and *, not power:
-    std::stable_sort(collapseFns.begin(), collapseFns.end(),
-            [](const Function& a, const Function& b) -> bool {
-                return a.getType() < b.getType();
-            });
+    std::stable_sort(collapseFns.begin(), collapseFns.end());
     std::vector<Function> simpleFns;
     auto fn = collapseFns.begin();
     for (; fn != collapseFns.end(); fn++) {

@@ -194,16 +194,13 @@ std::string Unary::getInfixString() const {
 }
 
 FunctionType Unary::getType() const {
-
     return FunctionType::UNARY;
 }
 
 OperationType Unary::getOperation() const {
-
     return op;
 }
 
 std::pair<const Function, std::vector<Function>> Unary::getFns() const {
-
     return{fn, std::vector<Function>()};
 }

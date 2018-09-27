@@ -119,6 +119,7 @@ public:
     //overload ostream operator to return string
     friend std::ostream& operator<<(std::ostream& o, const Function& fn);
 
+    friend bool operator<(const Function& f1, const Function& f2);
     
     ~Function() {
         delete f;
