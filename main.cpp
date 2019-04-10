@@ -48,7 +48,7 @@ void init_x(const Function f) {
      at the top of the window and the name of the minimized window
      respectively.
      */
-    XSetStandardProperties(dis,win,"this is the graph, my dude","HI!",None,NULL,0,NULL);
+    XSetStandardProperties(dis,win,"This is the graph","HI!",None,NULL,0,NULL);
     
     XSelectInput(dis, win, StructureNotifyMask);
     
@@ -229,7 +229,7 @@ int main(int argc, const char * argv[]) {
         std::cout << f;
         std::cout << "Derivative is: " << '\n';
         std::cout << f.simplify().derivative().simplify();
-        //init_x(f);
+        init_x(f);
         if (AbstractFunction::opts.simplify){
             std::cout << "Simplified function is: " << '\n';
             const Function simpleF = f.simplify();

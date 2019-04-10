@@ -31,7 +31,7 @@ enum OperationType {
     ASIN, ACOS, ATAN, ASEC, ACSC, ACOT, //6
     SINH, COSH, TANH, SECH, CSCH, COTH, //6
     ASINH, ACOSH, ATANH, ASECH, ACSCH, ACOTH, //6,
-    INVALID //1 - 35 in total
+    INVALID //1 - 35 in total - used for looping
 };
 
 struct Options {
