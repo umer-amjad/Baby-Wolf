@@ -208,6 +208,7 @@ void setOptions(){
 //return true if no errors, false if any errors caught
 
 int main(int argc, const char * argv[]) {
+    setenv("DISPLAY", ":0", 1);
     if (testAll()){
         std::cout << "All tests passed!" << std::endl;
     }
@@ -228,7 +229,7 @@ int main(int argc, const char * argv[]) {
         std::cout << "Function is: " << '\n';
         std::cout << f;
         std::cout << "Derivative is: " << '\n';
-        std::cout << f.simplify().derivative().simplify();
+        std::cout << f.derivative();
         init_x(f);
         if (AbstractFunction::opts.simplify){
             std::cout << "Simplified function is: " << '\n';
